@@ -1,3 +1,11 @@
+---
+name: "Feature Development"
+about: "✨ 새로운 기능 개발"
+title: "[FEAT] "
+labels: "feature, enhancement"
+assignees: ''
+---
+
 ## ✨ 새로운 기능
 <!-- 어떤 기능을 추가했는지 설명해주세요 -->
 

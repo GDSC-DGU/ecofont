@@ -1,3 +1,11 @@
+---
+name: "General/Refactor"
+about: "🔧 리팩토링 및 기타 작업"
+title: "[REFACTOR] "
+labels: "refactor"
+assignees: ''
+---
+
 ## 📝 변경 사항 요약
 <!-- 이 PR에서 무엇을 변경했는지 간단히 설명해주세요 -->
 

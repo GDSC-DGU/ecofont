@@ -1,3 +1,12 @@
+---
+name: "Bug Fix"
+about: "🐛 버그 수정"
+title: "[FIX] "
+labels: "bug"
+assignees: ''
+---
+
+
 ## 🐛 버그 설명
 <!-- 어떤 버그를 수정했는지 간단히 설명해주세요 -->
 

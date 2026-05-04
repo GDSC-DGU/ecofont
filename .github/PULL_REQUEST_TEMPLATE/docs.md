@@ -1,3 +1,12 @@
+---
+name: "Documentation Update"
+about: "📚 문서 작성 및 수정"
+title: "[DOCS] "
+labels: "documentation"
+assignees: ''
+---
+
+
 ## 📚 문서 변경 사항
 <!-- 어떤 문서를 추가/수정/삭제했는지 설명해주세요 -->
 
