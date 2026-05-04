@@ -35,7 +35,7 @@ ecofont/                              # 모노레포 루트
 │       │   ├── services/
 │       │   │   ├── font_processor.py # FontTools 글리프 파싱·수정
 │       │   │   ├── optimizer.py      # SSIM 기반 최적화 엔진 (이우제)
-│       │   │   └── rag_pipeline.py   # RAG Retrieve + Generation (류동현, 이우제)
+│       │   │   └── ocr_validator.py  # OCR 기반 가독성 검증 파이프라인 (류동현)
 │       │   └── utils/
 │       │       ├── gcs.py            # GCS 업로드·삭제 헬퍼
 │       │       └── metrics.py        # 잉크 절약률·탄소 저감량 계산
@@ -165,8 +165,6 @@ fonttools
 scipy
 numpy
 google-cloud-storage
-google-cloud-aiplatform
-pinecone-client
 python-multipart
 python-dotenv
 ```
@@ -176,7 +174,6 @@ python-dotenv
 GCS_BUCKET=<프로젝트ID>-font-upload
 GCP_PROJECT_ID=<프로젝트ID>
 GCP_REGION=asia-northeast3
-PINECONE_API_KEY=<Secret Manager에서 주입>
 ```
 
 **로컬 실행:**
@@ -204,8 +201,7 @@ terraform init
 # 플랜 확인
 terraform plan \
   -var="project_id=<프로젝트ID>" \
-  -var="backend_image=gcr.io/<프로젝트ID>/ecofont-backend:latest" \
-  -var="pinecone_api_key=<KEY>"
+  -var="backend_image=gcr.io/<프로젝트ID>/ecofont-backend:latest"
 
 # 적용
 terraform apply
