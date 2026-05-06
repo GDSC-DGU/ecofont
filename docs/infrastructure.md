@@ -48,7 +48,6 @@ infra/
 | 권한 | 역할 | 대상 |
 |------|------|------|
 | GCS 읽기/쓰기/삭제 | `roles/storage.objectAdmin` | 폰트 파일 업로드·삭제 |
-| Vertex AI 호출 | `roles/aiplatform.user` | 임베딩 및 LLM API 사용 |
 
 ---
 
@@ -97,11 +96,6 @@ variable "backend_image" {
   # 예: "gcr.io/<project_id>/ecofont-backend:latest"
 }
 
-variable "pinecone_api_key" {
-  description = "Pinecone API Key"
-  type        = string
-  sensitive   = true
-}
 ```
 
 ### gcs.tf
@@ -172,15 +166,6 @@ resource "google_cloud_run_v2_service" "backend" {
         value = var.region
       }
 
-      env {
-        name        = "PINECONE_API_KEY"
-        value_source {
-          secret_key_ref {
-            secret  = google_secret_manager_secret.pinecone_api_key.secret_id
-            version = "latest"
-          }
-        }
-      }
     }
 
     scaling {
@@ -216,25 +201,6 @@ resource "google_storage_bucket_iam_member" "backend_gcs" {
   member = "serviceAccount:${google_service_account.backend.email}"
 }
 
-resource "google_project_iam_member" "backend_vertex" {
-  project = var.project_id
-  role    = "roles/aiplatform.user"
-  member  = "serviceAccount:${google_service_account.backend.email}"
-}
-
-# Pinecone API Key를 Secret Manager에 저장
-resource "google_secret_manager_secret" "pinecone_api_key" {
-  secret_id = "pinecone-api-key"
-  replication {
-    auto {}
-  }
-}
-
-resource "google_secret_manager_secret_iam_member" "backend_secret" {
-  secret_id = google_secret_manager_secret.pinecone_api_key.id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.backend.email}"
-}
 ```
 
 ### outputs.tf
@@ -262,7 +228,6 @@ output "service_account_email" {
 
 | 항목 | 관리 방법 | 이유 |
 |------|-----------|------|
-| Pinecone 인덱스 | Pinecone 콘솔 | google provider 미지원 |
 | Vercel 배포 | Vercel 콘솔 또는 CLI | MVP 단계, 별도 provider 불필요 |
 | Docker 이미지 빌드/푸시 | 수동 또는 GitHub Actions | CI/CD 미포함 (MVP) |
 | Terraform 상태 버킷 | GCP 콘솔에서 수동 1회 생성 | 부트스트랩 문제 |
@@ -275,11 +240,9 @@ output "service_account_email" {
 2. 아래 API 활성화 (GCP 콘솔)
    - Cloud Run API
    - Cloud Storage API
-   - Vertex AI API
-   - Secret Manager API
 3. Terraform 상태 버킷 수동 생성: `ecofont-terraform-state`
 4. `terraform init`
-5. `terraform plan -var="project_id=<YOUR_PROJECT_ID>" -var="backend_image=<IMAGE_URL>" -var="pinecone_api_key=<KEY>"`
+5. `terraform plan -var="project_id=<YOUR_PROJECT_ID>" -var="backend_image=<IMAGE_URL>"`
 6. `terraform apply`
 
 ---
@@ -287,5 +250,4 @@ output "service_account_email" {
 ## TODO
 
 - [ ] CI/CD 파이프라인 연동 방식 결정 (GitHub Actions 등)
-- [ ] Vertex AI API 활성화 Terraform 코드 추가 여부 결정 (`google_project_service` 리소스)
 - [ ] Cloud Run concurrency 값 실측 후 조정
