@@ -19,5 +19,10 @@ export const action = style({
     "&:hover": {
       background: vars.color.primaryHover,
     },
+    "&:disabled": {
+      background: vars.color.border,
+      color: vars.color.textMuted,
+      cursor: "not-allowed",
+    },
   },
 });

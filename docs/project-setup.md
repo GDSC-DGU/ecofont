@@ -9,54 +9,19 @@ ecofont/                              # 모노레포 루트
 ├── apps/
 │   ├── frontend/                     # Next.js (이정선, 류동현)
 │   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── layout.tsx
+│   │   │   ├── app/                  # App Router 페이지
+│   │   │   │   ├── layout.tsx        # 공통 레이아웃
 │   │   │   │   ├── page.tsx          # 메인 TTF 업로드 페이지
-│   │   │   │   ├── page.css.ts
-│   │   │   │   └── result/
-│   │   │   │       ├── page.tsx      # 최종 결과 페이지
-│   │   │   │       └── page.css.ts
+│   │   │   │   └── result/           # 최종 결과 페이지
 │   │   │   ├── components/
-│   │   │   │   ├── common/
-│   │   │   │   │   ├── index.ts      # common 컴포넌트 re-export
-│   │   │   │   │   └── Header/
-│   │   │   │   │       ├── index.tsx
-│   │   │   │   │       └── Header.css.ts
-│   │   │   │   ├── upload/
-│   │   │   │   │   ├── index.ts      # upload 컴포넌트 re-export
-│   │   │   │   │   ├── FileUpload/
-│   │   │   │   │   │   ├── index.tsx
-│   │   │   │   │   │   └── FileUpload.css.ts
-│   │   │   │   │   ├── StartConversionButton/
-│   │   │   │   │   │   ├── index.tsx
-│   │   │   │   │   │   └── StartConversionButton.css.ts
-│   │   │   │   │   └── UploadGuide/
-│   │   │   │   │       ├── index.tsx
-│   │   │   │   │       └── UploadGuide.css.ts
-│   │   │   │   ├── loading/
-│   │   │   │   │   ├── index.ts      # loading 컴포넌트 re-export
-│   │   │   │   │   ├── LoadingOverlay/
-│   │   │   │   │   │   ├── index.tsx
-│   │   │   │   │   │   └── LoadingOverlay.css.ts
-│   │   │   │   │   └── LoadingPanel/
-│   │   │   │   │       ├── index.tsx
-│   │   │   │   │       └── LoadingPanel.css.ts
-│   │   │   │   └── result/
-│   │   │   │       ├── index.ts      # result 컴포넌트 re-export
-│   │   │   │       ├── DownloadResult/
-│   │   │   │       │   ├── index.tsx
-│   │   │   │       │   └── DownloadResult.css.ts
-│   │   │   │       ├── FontComparison/
-│   │   │   │       │   ├── index.tsx
-│   │   │   │       │   └── FontComparison.css.ts
-│   │   │   │       └── ResultMetrics/
-│   │   │   │           ├── index.tsx
-│   │   │   │           └── ResultMetrics.css.ts
-│   │   │   ├── styles/
-│   │   │   │   ├── global.css.ts     # vanilla-extract 전역 스타일
-│   │   │   │   └── theme.css.ts      # theme, color token, breakpoint
-│   │   │   ├── constants/
-│   │   │   │   └── copy.ts           # 화면 카피 상수
+│   │   │   │   ├── common/           # Header 등 공통 UI
+│   │   │   │   ├── upload/           # 업로드 화면 관련 UI
+│   │   │   │   ├── loading/          # 로딩 오버레이/패널 UI
+│   │   │   │   └── result/           # 결과 화면 관련 UI
+│   │   │   ├── styles/               # vanilla-extract global/theme
+│   │   │   ├── constants/            # 화면 카피 등 상수
+│   │   │   ├── hooks/                # 클라이언트 상태/이벤트 훅
+│   │   │   └── lib/                  # API 클라이언트 등
 │   │   ├── public/
 │   │   ├── package.json
 │   │   ├── next.config.ts
@@ -185,6 +150,13 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 ```bash
 pnpm dev   # http://localhost:3000
 ```
+
+**Frontend 구조 규칙:**
+
+- 컴포넌트는 기능 도메인별로 `components/common`, `components/upload`, `components/loading`, `components/result`에 배치합니다.
+- 각 도메인 폴더의 `index.ts`에서 컴포넌트를 re-export하고, 페이지에서는 도메인 폴더에서 묶어서 import합니다.
+- 컴포넌트 스타일은 동일 컴포넌트 폴더 안에 `ComponentName.css.ts` 형태로 둡니다.
+- 화면 문구는 `src/constants/copy.ts`, 파일 선택/검증 로직은 `src/hooks/useTtfFileUpload.ts`에서 관리합니다.
 
 ---
 

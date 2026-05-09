@@ -1,8 +1,20 @@
+"use client";
+
 import { StartConversionButton } from "@/components/upload/StartConversionButton";
 import { copy } from "@/constants/copy";
+import { useTtfFileUpload } from "@/hooks/useTtfFileUpload";
 import * as styles from "./FileUpload.css";
 
 export function FileUpload() {
+  const {
+    inputRef,
+    selectedFile,
+    errorMessage,
+    handleFileChange,
+    handleDrop,
+    clearSelectedFile,
+  } = useTtfFileUpload();
+
   return (
     <section className={styles.card}>
       <div className={styles.top}>
@@ -13,19 +25,56 @@ export function FileUpload() {
         <span className={styles.badge}>{copy.upload.badge}</span>
       </div>
 
-      <label className={styles.dropzone}>
-        <span className={styles.uploadText}>
-          <span className={styles.primaryText}>
-            {copy.upload.dropzonePrimary}
+      {selectedFile ? (
+        <div className={styles.selectedFilePanel} aria-live="polite">
+          <div className={styles.fileInfo}>
+            <span className={styles.fileLabel}>
+              {copy.upload.selectedFileLabel}
+            </span>
+            <span className={styles.fileName}>{selectedFile.name}</span>
+            <span className={styles.fileStatus}>
+              {copy.upload.selectedFileReady}
+            </span>
+          </div>
+          <button
+            className={styles.clearButton}
+            type="button"
+            onClick={clearSelectedFile}
+          >
+            {copy.upload.removeFileAction}
+          </button>
+        </div>
+      ) : (
+        <label
+          className={styles.dropzone}
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={handleDrop}
+        >
+          <span className={styles.uploadText}>
+            <span className={styles.primaryText}>
+              {copy.upload.dropzonePrimary}
+            </span>
+            <span className={styles.secondaryText}>
+              {copy.upload.dropzoneSecondary}
+            </span>
           </span>
-          <span className={styles.secondaryText}>
-            {copy.upload.dropzoneSecondary}
-          </span>
-        </span>
-        <input className={styles.input} type="file" accept=".ttf,font/ttf" />
-      </label>
+          <input
+            ref={inputRef}
+            className={styles.input}
+            type="file"
+            accept=".ttf,font/ttf"
+            onChange={handleFileChange}
+          />
+        </label>
+      )}
 
-      <StartConversionButton />
+      {errorMessage ? (
+        <p className={styles.errorMessage} role="alert">
+          {errorMessage}
+        </p>
+      ) : null}
+
+      <StartConversionButton disabled={!selectedFile} />
     </section>
   );
 }

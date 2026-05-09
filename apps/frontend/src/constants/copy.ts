@@ -15,7 +15,12 @@ export const copy = {
       "다양한 언어의 타이포그래피가 더 적은 잉크로 인쇄될 수 있도록 원본 TTF 파일을 선택해 주세요.",
     badge: "TTF only",
     dropzonePrimary: "파일 선택 또는 드래그 앤 드롭",
-    dropzoneSecondary: "최대 20MB .ttf 파일",
+    dropzoneSecondary: "최대 20MB .ttf 파일 · 한 번에 1개만 선택 가능",
+    selectedFileLabel: "선택된 파일",
+    selectedFileReady: "업로드 준비가 완료되었습니다.",
+    removeFileAction: "선택 해제",
+    invalidFileError: "TTF 파일만 업로드할 수 있습니다.",
+    multipleFilesError: "파일은 하나만 선택할 수 있습니다.",
     action: "잉크 다이어트 시작",
     guideSteps: [
       {
