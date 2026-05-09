@@ -31,10 +31,17 @@ export function useTtfFileUpload(): UseTtfFileUploadResult {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const resetInputValue = () => {
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
   const setFile = (file: File) => {
     if (!isTtfFile(file)) {
       setSelectedFile(null);
       setErrorMessage(copy.upload.invalidFileError);
+      resetInputValue();
       return false;
     }
 
@@ -53,13 +60,11 @@ export function useTtfFileUpload(): UseTtfFileUploadResult {
     if (files.length > 1) {
       setSelectedFile(null);
       setErrorMessage(copy.upload.multipleFilesError);
-      event.target.value = "";
+      resetInputValue();
       return;
     }
 
-    if (!setFile(files[0])) {
-      event.target.value = "";
-    }
+    setFile(files[0]);
   };
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
@@ -81,10 +86,7 @@ export function useTtfFileUpload(): UseTtfFileUploadResult {
   const clearSelectedFile = () => {
     setSelectedFile(null);
     setErrorMessage("");
-
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
+    resetInputValue();
   };
 
   return {
