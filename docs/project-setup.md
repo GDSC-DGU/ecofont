@@ -77,14 +77,14 @@ ecofont/                              # 모노레포 루트
 
 ## 사전 준비 (Prerequisites)
 
-| 도구       | 버전   | 용도                    |
-| ---------- | ------ | ----------------------- |
-| Node.js    | 20 LTS | Frontend 런타임         |
-| pnpm       | 9.x    | 패키지 매니저           |
-| Python     | 3.11   | Backend 런타임          |
-| Docker     | 최신   | 백엔드 컨테이너 빌드    |
-| Terraform  | 1.7+   | GCP 인프라 프로비저닝   |
-| gcloud CLI | 최신   | GCP 인증 및 이미지 푸시 |
+| 도구       | 버전    | 용도                    |
+| ---------- | ------- | ----------------------- |
+| Node.js    | 20 LTS  | Frontend 런타임         |
+| pnpm       | 10.24.0 | 패키지 매니저           |
+| Python     | 3.11    | Backend 런타임          |
+| Docker     | 최신    | 백엔드 컨테이너 빌드    |
+| Terraform  | 1.7+    | GCP 인프라 프로비저닝   |
+| gcloud CLI | 최신    | GCP 인증 및 이미지 푸시 |
 
 ---
 
