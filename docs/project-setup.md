@@ -108,7 +108,6 @@ pnpm install
   "private": true,
   "scripts": {
     "dev:frontend": "pnpm --filter frontend dev",
-    "dev:backend": "pnpm --filter backend dev",
     "build:frontend": "pnpm --filter frontend build",
     "lint:frontend": "pnpm --filter frontend lint"
   }
