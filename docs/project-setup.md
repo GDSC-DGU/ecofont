@@ -11,19 +11,55 @@ ecofont/                              # 모노레포 루트
 │   │   ├── src/
 │   │   │   ├── app/
 │   │   │   │   ├── layout.tsx
-│   │   │   │   ├── page.tsx          # 메인 업로드 페이지
-│   │   │   │   └── globals.css
+│   │   │   │   ├── page.tsx          # 메인 TTF 업로드 페이지
+│   │   │   │   ├── page.css.ts
+│   │   │   │   └── result/
+│   │   │   │       ├── page.tsx      # 최종 결과 페이지
+│   │   │   │       └── page.css.ts
 │   │   │   ├── components/
-│   │   │   │   ├── FileUpload.tsx    # .ttf 업로드 UI
-│   │   │   │   ├── FontPreview.tsx   # 원본/변환 비교 미리보기
-│   │   │   │   ├── Dashboard.tsx    # 잉크 절약률·탄소 저감량
-│   │   │   │   ├── DownloadButton.tsx
-│   │   │   │   └── LoadingSpinner.tsx # 콜드 스타트 대기 UI
-│   │   │   └── lib/
-│   │   │       └── api.ts            # 백엔드 API 클라이언트
+│   │   │   │   ├── common/
+│   │   │   │   │   ├── index.ts      # common 컴포넌트 re-export
+│   │   │   │   │   └── Header/
+│   │   │   │   │       ├── index.tsx
+│   │   │   │   │       └── Header.css.ts
+│   │   │   │   ├── upload/
+│   │   │   │   │   ├── index.ts      # upload 컴포넌트 re-export
+│   │   │   │   │   ├── FileUpload/
+│   │   │   │   │   │   ├── index.tsx
+│   │   │   │   │   │   └── FileUpload.css.ts
+│   │   │   │   │   ├── StartConversionButton/
+│   │   │   │   │   │   ├── index.tsx
+│   │   │   │   │   │   └── StartConversionButton.css.ts
+│   │   │   │   │   └── UploadGuide/
+│   │   │   │   │       ├── index.tsx
+│   │   │   │   │       └── UploadGuide.css.ts
+│   │   │   │   ├── loading/
+│   │   │   │   │   ├── index.ts      # loading 컴포넌트 re-export
+│   │   │   │   │   ├── LoadingOverlay/
+│   │   │   │   │   │   ├── index.tsx
+│   │   │   │   │   │   └── LoadingOverlay.css.ts
+│   │   │   │   │   └── LoadingPanel/
+│   │   │   │   │       ├── index.tsx
+│   │   │   │   │       └── LoadingPanel.css.ts
+│   │   │   │   └── result/
+│   │   │   │       ├── index.ts      # result 컴포넌트 re-export
+│   │   │   │       ├── DownloadResult/
+│   │   │   │       │   ├── index.tsx
+│   │   │   │       │   └── DownloadResult.css.ts
+│   │   │   │       ├── FontComparison/
+│   │   │   │       │   ├── index.tsx
+│   │   │   │       │   └── FontComparison.css.ts
+│   │   │   │       └── ResultMetrics/
+│   │   │   │           ├── index.tsx
+│   │   │   │           └── ResultMetrics.css.ts
+│   │   │   ├── styles/
+│   │   │   │   ├── global.css.ts     # vanilla-extract 전역 스타일
+│   │   │   │   └── theme.css.ts      # theme, color token, breakpoint
+│   │   │   ├── constants/
+│   │   │   │   └── copy.ts           # 화면 카피 상수
 │   │   ├── public/
 │   │   ├── package.json
-│   │   ├── next.config.js
+│   │   ├── next.config.ts
 │   │   ├── tsconfig.json
 │   │   └── .env.local               # NEXT_PUBLIC_API_URL 등
 │   │
@@ -76,14 +112,14 @@ ecofont/                              # 모노레포 루트
 
 ## 사전 준비 (Prerequisites)
 
-| 도구 | 버전 | 용도 |
-|------|------|------|
-| Node.js | 20 LTS | Frontend 런타임 |
-| pnpm | 9.x | 패키지 매니저 |
-| Python | 3.11 | Backend 런타임 |
-| Docker | 최신 | 백엔드 컨테이너 빌드 |
-| Terraform | 1.7+ | GCP 인프라 프로비저닝 |
-| gcloud CLI | 최신 | GCP 인증 및 이미지 푸시 |
+| 도구       | 버전   | 용도                    |
+| ---------- | ------ | ----------------------- |
+| Node.js    | 20 LTS | Frontend 런타임         |
+| pnpm       | 9.x    | 패키지 매니저           |
+| Python     | 3.11   | Backend 런타임          |
+| Docker     | 최신   | 백엔드 컨테이너 빌드    |
+| Terraform  | 1.7+   | GCP 인프라 프로비저닝   |
+| gcloud CLI | 최신   | GCP 인증 및 이미지 푸시 |
 
 ---
 
@@ -100,6 +136,7 @@ pnpm install
 ```
 
 **루트 `package.json`:**
+
 ```json
 {
   "name": "ecofont",
@@ -107,15 +144,17 @@ pnpm install
   "scripts": {
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
-    "build:frontend": "pnpm --filter frontend build"
+    "build:frontend": "pnpm --filter frontend build",
+    "lint:frontend": "pnpm --filter frontend lint"
   }
 }
 ```
 
 **`pnpm-workspace.yaml`:**
+
 ```yaml
 packages:
-  - "apps/frontend"
+  - 'apps/frontend'
 ```
 
 ---
@@ -126,18 +165,23 @@ packages:
 cd apps/frontend
 
 # Next.js 프로젝트 생성 (최초 1회)
-pnpm create next-app . --typescript --tailwind --app
+pnpm create next-app . --typescript --app
 
 # 의존성 설치
 pnpm install
+
+# styling (vanilla-extract)
+pnpm add @vanilla-extract/css @vanilla-extract/next-plugin
 ```
 
 **`.env.local` 작성:**
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
 **로컬 실행:**
+
 ```bash
 pnpm dev   # http://localhost:3000
 ```
@@ -158,6 +202,7 @@ pip install -r requirements.txt
 ```
 
 **`requirements.txt`:**
+
 ```
 fastapi
 uvicorn[standard]
@@ -170,6 +215,7 @@ python-dotenv
 ```
 
 **`.env` 작성:**
+
 ```env
 GCS_BUCKET=<프로젝트ID>-font-upload
 GCP_PROJECT_ID=<프로젝트ID>
@@ -177,6 +223,7 @@ GCP_REGION=asia-northeast3
 ```
 
 **로컬 실행:**
+
 ```bash
 uvicorn app.main:app --reload --port 8000
 ```
@@ -225,6 +272,7 @@ docker push gcr.io/<프로젝트ID>/ecofont-backend:latest
 ```
 
 **`Dockerfile`:**
+
 ```dockerfile
 FROM python:3.11-slim
 
@@ -251,6 +299,7 @@ vercel --prod
 ```
 
 Vercel 대시보드에서 환경변수 설정:
+
 - `NEXT_PUBLIC_API_URL` → Cloud Run 백엔드 URL (`terraform output backend_url`로 확인)
 
 ---

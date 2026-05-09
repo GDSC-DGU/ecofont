@@ -1,0 +1,22 @@
+# Python
+apps/backend/.venv/
+apps/backend/__pycache__/
+apps/backend/*.pyc
+apps/backend/.env
+
+# Node
+node_modules/
+apps/frontend/node_modules/
+apps/frontend/.next/
+apps/frontend/.env.local
+
+# Terraform
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.backup
+infra/.terraform.lock.hcl
+
+# Local/editor
+.DS_Store
+.history
+.pnpm-store/
