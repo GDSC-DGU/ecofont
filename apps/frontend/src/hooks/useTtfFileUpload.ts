@@ -35,11 +35,12 @@ export function useTtfFileUpload(): UseTtfFileUploadResult {
     if (!isTtfFile(file)) {
       setSelectedFile(null);
       setErrorMessage(copy.upload.invalidFileError);
-      return;
+      return false;
     }
 
     setSelectedFile(file);
     setErrorMessage("");
+    return true;
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +57,9 @@ export function useTtfFileUpload(): UseTtfFileUploadResult {
       return;
     }
 
-    setFile(files[0]);
+    if (!setFile(files[0])) {
+      event.target.value = "";
+    }
   };
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
