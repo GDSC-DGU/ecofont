@@ -9,21 +9,22 @@ ecofont/                              # 모노레포 루트
 ├── apps/
 │   ├── frontend/                     # Next.js (이정선, 류동현)
 │   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── layout.tsx
-│   │   │   │   ├── page.tsx          # 메인 업로드 페이지
-│   │   │   │   └── globals.css
+│   │   │   ├── app/                  # App Router 페이지
+│   │   │   │   ├── layout.tsx        # 공통 레이아웃
+│   │   │   │   ├── page.tsx          # 메인 TTF 업로드 페이지
+│   │   │   │   └── result/           # 최종 결과 페이지
 │   │   │   ├── components/
-│   │   │   │   ├── FileUpload.tsx    # .ttf 업로드 UI
-│   │   │   │   ├── FontPreview.tsx   # 원본/변환 비교 미리보기
-│   │   │   │   ├── Dashboard.tsx    # 잉크 절약률·탄소 저감량
-│   │   │   │   ├── DownloadButton.tsx
-│   │   │   │   └── LoadingSpinner.tsx # 콜드 스타트 대기 UI
-│   │   │   └── lib/
-│   │   │       └── api.ts            # 백엔드 API 클라이언트
+│   │   │   │   ├── common/           # Header 등 공통 UI
+│   │   │   │   ├── upload/           # 업로드 화면 관련 UI
+│   │   │   │   ├── loading/          # 로딩 오버레이/패널 UI
+│   │   │   │   └── result/           # 결과 화면 관련 UI
+│   │   │   ├── styles/               # vanilla-extract global/theme
+│   │   │   ├── constants/            # 화면 카피 등 상수
+│   │   │   ├── hooks/                # 클라이언트 상태/이벤트 훅
+│   │   │   └── lib/                  # API 클라이언트 등
 │   │   ├── public/
 │   │   ├── package.json
-│   │   ├── next.config.js
+│   │   ├── next.config.ts
 │   │   ├── tsconfig.json
 │   │   └── .env.local               # NEXT_PUBLIC_API_URL 등
 │   │
@@ -76,14 +77,14 @@ ecofont/                              # 모노레포 루트
 
 ## 사전 준비 (Prerequisites)
 
-| 도구 | 버전 | 용도 |
-|------|------|------|
-| Node.js | 20 LTS | Frontend 런타임 |
-| pnpm | 9.x | 패키지 매니저 |
-| Python | 3.11 | Backend 런타임 |
-| Docker | 최신 | 백엔드 컨테이너 빌드 |
-| Terraform | 1.7+ | GCP 인프라 프로비저닝 |
-| gcloud CLI | 최신 | GCP 인증 및 이미지 푸시 |
+| 도구       | 버전    | 용도                    |
+| ---------- | ------- | ----------------------- |
+| Node.js    | 20 LTS  | Frontend 런타임         |
+| pnpm       | 10.24.0 | 패키지 매니저           |
+| Python     | 3.11    | Backend 런타임          |
+| Docker     | 최신    | 백엔드 컨테이너 빌드    |
+| Terraform  | 1.7+    | GCP 인프라 프로비저닝   |
+| gcloud CLI | 최신    | GCP 인증 및 이미지 푸시 |
 
 ---
 
@@ -100,22 +101,24 @@ pnpm install
 ```
 
 **루트 `package.json`:**
+
 ```json
 {
   "name": "ecofont",
   "private": true,
   "scripts": {
     "dev:frontend": "pnpm --filter frontend dev",
-    "dev:backend": "pnpm --filter backend dev",
-    "build:frontend": "pnpm --filter frontend build"
+    "build:frontend": "pnpm --filter frontend build",
+    "lint:frontend": "pnpm --filter frontend lint"
   }
 }
 ```
 
 **`pnpm-workspace.yaml`:**
+
 ```yaml
 packages:
-  - "apps/frontend"
+  - 'apps/frontend'
 ```
 
 ---
@@ -126,21 +129,33 @@ packages:
 cd apps/frontend
 
 # Next.js 프로젝트 생성 (최초 1회)
-pnpm create next-app . --typescript --tailwind --app
+pnpm create next-app . --typescript --app
 
 # 의존성 설치
 pnpm install
+
+# styling (vanilla-extract)
+pnpm add @vanilla-extract/css @vanilla-extract/next-plugin
 ```
 
 **`.env.local` 작성:**
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
 **로컬 실행:**
+
 ```bash
 pnpm dev   # http://localhost:3000
 ```
+
+**Frontend 구조 규칙:**
+
+- 컴포넌트는 기능 도메인별로 `components/common`, `components/upload`, `components/loading`, `components/result`에 배치합니다.
+- 각 도메인 폴더의 `index.ts`에서 컴포넌트를 re-export하고, 페이지에서는 도메인 폴더에서 묶어서 import합니다.
+- 컴포넌트 스타일은 동일 컴포넌트 폴더 안에 `ComponentName.css.ts` 형태로 둡니다.
+- 화면 문구는 `src/constants/copy.ts`, 파일 선택/검증 로직은 `src/hooks/useTtfFileUpload.ts`에서 관리합니다.
 
 ---
 
@@ -158,6 +173,7 @@ pip install -r requirements.txt
 ```
 
 **`requirements.txt`:**
+
 ```
 fastapi
 uvicorn[standard]
@@ -170,6 +186,7 @@ python-dotenv
 ```
 
 **`.env` 작성:**
+
 ```env
 GCS_BUCKET=<프로젝트ID>-font-upload
 GCP_PROJECT_ID=<프로젝트ID>
@@ -177,6 +194,7 @@ GCP_REGION=asia-northeast3
 ```
 
 **로컬 실행:**
+
 ```bash
 uvicorn app.main:app --reload --port 8000
 ```
@@ -225,6 +243,7 @@ docker push gcr.io/<프로젝트ID>/ecofont-backend:latest
 ```
 
 **`Dockerfile`:**
+
 ```dockerfile
 FROM python:3.11-slim
 
@@ -251,6 +270,7 @@ vercel --prod
 ```
 
 Vercel 대시보드에서 환경변수 설정:
+
 - `NEXT_PUBLIC_API_URL` → Cloud Run 백엔드 URL (`terraform output backend_url`로 확인)
 
 ---
