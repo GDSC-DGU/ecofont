@@ -3,12 +3,13 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-05-12T00:00:00Z
-- **Current Stage**: INCEPTION - Workflow Planning
+- **Last Updated**: 2026-06-07T00:00:00Z
+- **Current Stage**: INCEPTION 완료 → CONSTRUCTION 대기 (Unit 1a)
 
 ## Workspace State
 - **Existing Code**: Yes
-- **Reverse Engineering Needed**: Yes (완료)
-- **Workspace Root**: /Users/ddong/ecofont
+- **Reverse Engineering Needed**: Yes (완료, 산출물은 토큰 효율을 위해 archive)
+- **Workspace Root**: /Users/toni/Documents/ecofont
 
 ## Code Location Rules
 - **Application Code**: Workspace root (NEVER in aidlc-docs/)
