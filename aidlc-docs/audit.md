@@ -103,3 +103,19 @@
 **Context**: Construction Phase - Unit 2 / NFR Requirements (사용자 승인 대기)
 
 ---
+
+## NFR Requirements 승인 + PR #8 머지 + NFR Design 작성
+**Timestamp**: 2026-06-07T13:00:00Z
+**User Input**: "다음 단계 진행 / 우선 PR 부터 작성하자. .github 하위에 있는 템플릿대로 작성해줘 / merge 완료했어. 다음 작업 시작하자. 모두 너 추천대로 진행할게"
+**AI Response**: (1) NFR Requirements 승인 처리 + 커밋(1b64ced) + 푸시. (2) .github/pull_request_template.md 양식대로 PR #8 생성, develop으로 머지 완료(f18a003). (3) `docs/unit-2-nfr-design` 신규 분기 후 aidlc-docs/construction/unit-2/nfr-design.md 작성. 결정 9건 확정: Open-4=uv, Open-5=python:3.11-slim-bookworm, 로깅=structlog, HTTP=uvicorn[standard], 비동기=asyncio.create_task, 린터=ruff, 타입체크=pyright(IDE only), Job 저장소=dict+asyncio.Lock, Dockerfile=uv multi-stage + non-root. 모든 NFR-U2-* 22항목에 대해 구체적 구현 패턴/코드 스니펫/Terraform 매핑 제공. 신규 Open Item 없음 (Open-1~3은 carry-over).
+**Context**: Construction Phase - Unit 2 / NFR Design (사용자 승인 대기)
+
+---
+
+## NFR Design 승인 + Infrastructure Design 작성
+**Timestamp**: 2026-06-07T14:00:00Z
+**User Input**: "다음 단계 진행, NFR Design + Infra Design 묶어서 1 PR"
+**AI Response**: NFR Design 승인 처리(Task #8 completed). aidlc-docs/construction/unit-2/infrastructure-design.md 작성. docs/infrastructure.md(팀 원본, 수정 금지)을 참조하되 NFR 결정 반영한 final 스펙 도출. 9개 INFRA-* 결정 확정: flat Terraform 구조, Artifact Registry(GCR 대체), GCS 버킷 input/output 2개 분리, Cloud Run 2vCPU/2Gi/timeout=600s/cpu_idle=false, output 버킷 CORS GET only, SA self-impersonation으로 키 없이 signed URL 발급, /health 기반 probe, API 7개 활성화 목록. docs/infrastructure.md 대비 11개 Delta 항목 표로 명시. NFR Design + Infrastructure Design 묶어서 한 PR로 푸시 예정 (사용자 요청).
+**Context**: Construction Phase - Unit 2 / Infrastructure Design (사용자 승인 대기)
+
+---
