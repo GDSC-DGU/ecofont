@@ -3,8 +3,8 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-05-12T00:00:00Z
-- **Last Updated**: 2026-06-07T12:00:00Z
-- **Current Stage**: CONSTRUCTION / Unit 2 NFR Requirements (승인 대기)
+- **Last Updated**: 2026-06-07T14:00:00Z
+- **Current Stage**: CONSTRUCTION / Unit 2 Infrastructure Design (승인 대기)
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -39,10 +39,10 @@
 - [x] Units Generation (완료)
 
 ### CONSTRUCTION PHASE
-- [x] Functional Design — Unit 2 v2 (Q1=A, Q2=B, Q3=A, Q4=C) 승인 완료
-- [~] NFR Requirements — Unit 2 초안 완료, 승인 대기
-- [ ] NFR Design (EXECUTE, 유닛별)
-- [ ] Infrastructure Design (EXECUTE, 유닛별)
+- [x] Functional Design — Unit 2 v2 (Q1=A, Q2=B, Q3=A, Q4=C) 승인 완료 (PR #8 merged)
+- [x] NFR Requirements — Unit 2 22개 NFR-U2-* 항목 승인 완료 (PR #8 merged)
+- [x] NFR Design — Unit 2 9개 결정 승인 완료 (Open-4·5 해결)
+- [~] Infrastructure Design — Unit 2 초안 완료, 승인 대기 (NFR Design과 묶어서 PR 예정)
 - [ ] Code Generation (EXECUTE, 항상)
 - [ ] Build and Test (EXECUTE, 항상)
 
@@ -51,11 +51,10 @@
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 2 (Backend) — NFR Requirements 초안 완료
-- **Next Stage**: 변경 요청 처리 또는 Unit 2 NFR Design 진행
-- **Status**: 사용자 승인 대기 (2-옵션: 변경 요청 / 다음 단계 진행)
-- **확정 결정 (Functional Design v2)**: Q1=통합(InProcess), Q2=비동기 폴링, Q3=Signed URL 24h, Q4=Hexagonal+Light DDD
-- **NFR Requirements 핵심 기준**: cold start ≤20s, GET /jobs p95 <200ms, max_instances=1, concurrency=1, 이미지 ≤800MB, JSON 구조화 로깅
-- **Open Items**: Open-1(잉크 산출법), Open-2(CO2 계수), Open-3(CI/CD), Open-4(uv vs poetry), Open-5(베이스 이미지)
-- **작업 브랜치**: `docs/unit-2-functional-design` (develop에서 분기, 미커밋)
-- **커밋 계획**: NFR Requirements까지 한 번에 커밋 (사용자 요청)
+- **Current Stage**: Unit 2 (Backend) — Infrastructure Design 초안 완료
+- **Next Stage**: 변경 요청 처리 또는 Unit 2 Code Generation 진행
+- **Status**: 사용자 승인 대기 (2-옵션)
+- **확정 결정 (Infra Design)**: Terraform flat 구조, Artifact Registry, GCS 버킷 2개(input/output), Cloud Run 2vCPU/2Gi/timeout=600s, cpu_idle=false, /health probe, SA self-impersonation for signed URL
+- **Delta vs docs/infrastructure.md**: 11개 항목 변경 (memory 1→2Gi, max_instances 3→1, GCR→AR, 버킷 1→2개 등)
+- **Open Items 진행**: Open-4·5 해결, Open-1·2·3 미해결
+- **작업 브랜치**: `docs/unit-2-nfr-design` (NFR Design + Infra Design 묶음, 미커밋)
