@@ -119,3 +119,19 @@
 **Context**: Construction Phase - Unit 2 / Infrastructure Design (사용자 승인 대기)
 
 ---
+
+## Infrastructure Design 승인 + Code Generation 수행
+**Timestamp**: 2026-06-07T15:00:00Z
+**User Input**: "다음 단계 진행 / merge 완료. code generation 진행"
+**AI Response**: Infrastructure Design 승인 처리(Task #9 completed), PR #9 머지 확인(9992736). `feat/unit-2-backend-codegen` 신규 분기. apps/backend/ 25개 .py 파일 + pyproject.toml + Dockerfile + .dockerignore + .env.example + README.md 생성 (Hexagonal 구조: domain/ports/application/adapters{inbound,outbound}). infra/ 7개 .tf 파일 + tfvars.example + README.md 생성 (Cloud Run + Artifact Registry + GCS input/output + IAM SA + self-impersonation). 검증: Python AST parse 25/25 통과. uv·terraform은 로컬 셸에 없어 lockfile 생성·tf fmt/validate는 소은님 셸에서 실행 필요. Open Items 처리: Open-1(잉크 산출법) placeholder=좌표 수 비교, Open-2(CO2 계수) placeholder=0.005g/단위, Unit 3 AI Engine=identity transformation placeholder.
+**Context**: Construction Phase - Unit 2 / Code Generation (사용자 승인 대기, 미커밋)
+
+---
+
+## CI/CD 후속 의제 + idle 비용 확인 + 우제 onboarding + HTTPS 정합 + CLAUDE.md 갱신
+**Timestamp**: 2026-06-07T16:00:00Z
+**User Input**: "나중에 github actions 달아서 프론트엔드는 vercel, 백엔드는 gcp 로 배포 흐름 이어지게 할거야. 후속 의제로 달자. 또한, 평상시에는 gcp에서 리소스를 거의 사용하지 않았으면 좋겠어 / 그리고 우제가 이후에 ai 모델을 개발 시작할 때, 어디에서 어떻게 작업해야하는지 명시해두었어? / 그리고 추가적으로 궁금한 부분이 있어. be에는 https 붙이지 않을거야. (MVP 기준.) 배포 방법이 간단해서 vercel을 선택했는데, http를 사용할 것을 고려하면 vercel이 아니라 gcp를 사용하는 게 나으려나? / OK 이해했어. 그러면 그대로 진행하자. 이제 갱신이나 정합 필요한 문서 없는지 검토하고 커밋하자"
+**AI Response**: (1) CI/CD: Task #10 (GitHub Actions Vercel+GCP) + Task #11 (Artifact Registry cleanup 정책) 후속 의제 등록. infra/README.md에 평상시 idle 비용 표(거의 $0) + 후속 의제 섹션 추가. memory/project_dev_pattern.md 작성. (2) idle 비용: 현행 설계(min_instances=0 + Lifecycle 1d)로 이미 ≈$0/주, 완전 정지는 terraform destroy 옵션 안내. (3) 우제 onboarding: apps/ai-engine/README.md 작성 — 디렉토리·인터페이스·통합 절차·OCR 분리·Open Items 협의 대상 명시. apps/backend/README.md + inprocess_ai_engine.py docstring에서 onboarding 링크 추가. (4) HTTPS: 사용자가 BE를 HTTP-only로 가정했으나 Cloud Run은 HTTPS default·무료·자동 — 별도 작업 0. NFR-U2-SEC-5에 이미 명시되어 있어 추가 변경 불필요. Mixed content 차단 위험 설명. (5) 정합 검토: CLAUDE.md 5개 항목 갱신 — §3 디렉토리(미생성 → 생성, ai-engine 추가), §4 작업 흐름 단계, §7 문서 인덱스에 construction/unit-2/* 4개 + README 3개 추가, §8 Open Items (Open-1·2·3 명시, concurrency·uv·image 해결 표기), docs/infrastructure.md 설명 갱신.
+**Context**: Construction Phase - Unit 2 / Code Generation + 후속 정합 (커밋 직전)
+
+---

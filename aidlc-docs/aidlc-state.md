@@ -3,8 +3,8 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-05-12T00:00:00Z
-- **Last Updated**: 2026-06-07T14:00:00Z
-- **Current Stage**: CONSTRUCTION / Unit 2 Infrastructure Design (승인 대기)
+- **Last Updated**: 2026-06-07T16:00:00Z
+- **Current Stage**: CONSTRUCTION / Unit 2 Code Generation (커밋 직전)
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -41,9 +41,9 @@
 ### CONSTRUCTION PHASE
 - [x] Functional Design — Unit 2 v2 (Q1=A, Q2=B, Q3=A, Q4=C) 승인 완료 (PR #8 merged)
 - [x] NFR Requirements — Unit 2 22개 NFR-U2-* 항목 승인 완료 (PR #8 merged)
-- [x] NFR Design — Unit 2 9개 결정 승인 완료 (Open-4·5 해결)
-- [~] Infrastructure Design — Unit 2 초안 완료, 승인 대기 (NFR Design과 묶어서 PR 예정)
-- [ ] Code Generation (EXECUTE, 항상)
+- [x] NFR Design — Unit 2 9개 결정 승인 완료 (PR #9 merged)
+- [x] Infrastructure Design — Unit 2 9개 INFRA-* 결정 승인 완료 (PR #9 merged)
+- [~] Code Generation — Unit 2 apps/backend + infra 코드 생성 완료, 승인 대기
 - [ ] Build and Test (EXECUTE, 항상)
 
 ### OPERATIONS PHASE
@@ -51,10 +51,16 @@
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 2 (Backend) — Infrastructure Design 초안 완료
-- **Next Stage**: 변경 요청 처리 또는 Unit 2 Code Generation 진행
-- **Status**: 사용자 승인 대기 (2-옵션)
-- **확정 결정 (Infra Design)**: Terraform flat 구조, Artifact Registry, GCS 버킷 2개(input/output), Cloud Run 2vCPU/2Gi/timeout=600s, cpu_idle=false, /health probe, SA self-impersonation for signed URL
-- **Delta vs docs/infrastructure.md**: 11개 항목 변경 (memory 1→2Gi, max_instances 3→1, GCR→AR, 버킷 1→2개 등)
-- **Open Items 진행**: Open-4·5 해결, Open-1·2·3 미해결
-- **작업 브랜치**: `docs/unit-2-nfr-design` (NFR Design + Infra Design 묶음, 미커밋)
+- **Current Stage**: Unit 2 (Backend) — Code Generation 완료 + Unit 3 onboarding 문서 + 후속 의제 트래킹 + CLAUDE.md 정합
+- **Next Stage**: Unit 2 Build and Test (로컬 `uv sync` / docker build / 가동) 또는 Unit 3 시작 (우제)
+- **Status**: 커밋·푸시·PR 직전
+- **생성 산출물 (40 파일)**:
+  - `apps/backend/` 30 파일 (Python 25 + pyproject.toml + Dockerfile + .dockerignore + .env.example + README)
+  - `apps/ai-engine/README.md` (우제 onboarding)
+  - `infra/` 9 파일 (Terraform 7 + tfvars.example + README)
+- **수정 산출물**: `CLAUDE.md` (디렉토리 트리·문서 인덱스·Open Items 동기화), `apps/backend/README.md` (ai-engine 링크), `apps/backend/app/adapters/outbound/inprocess_ai_engine.py` (onboarding 참조), `infra/README.md` (idle 비용 + 후속 의제)
+- **검증 통과**: Python AST parse 25/25, ruff/pyright/terraform fmt는 로컬 실행 필요
+- **남은 Open Items**: Open-1 잉크 산출법 (placeholder=좌표 수 비교), Open-2 CO2 계수 (placeholder=0.005g/단위), Open-3 CI/CD, OCR 언어 범위
+- **결정된 운영 원칙**: HTTPS는 Cloud Run 기본 자동 적용(NFR-U2-SEC-5), idle 시 GCP $0 (min_instances=0 + Lifecycle 1d)
+- **AI Engine 의존**: `inprocess_ai_engine.py` identity placeholder — `apps/ai-engine/README.md` 가 우제 시작 시점 가이드
+- **작업 브랜치**: `feat/unit-2-backend-codegen` (develop에서 분기, 미커밋)

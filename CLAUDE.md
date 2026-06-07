@@ -37,8 +37,9 @@ AI가 빠르게 컨텍스트를 잡고 일관되게 작업하기 위한 인덱�
 ecofont/
 ├── apps/
 │   ├── frontend/      # Next.js  ← 코드
-│   └── backend/       # FastAPI  ← 코드 (미생성)
-├── infra/             # Terraform ← 코드 (미생성)
+│   ├── backend/       # FastAPI (Hexagonal + Light DDD) ← 코드
+│   └── ai-engine/     # AI 최적화 + OCR 검증 (우제·동현 시작 대기, README만)
+├── infra/             # Terraform (Cloud Run + GCS + Artifact Registry + IAM) ← 코드
 ├── docs/              # 팀 원본 문서
 ├── aidlc-docs/        # AI-DLC 산출물
 └── .aidlc-rule-details/  # AI-DLC 워크플로우 규칙 (필요 시만 참조)
@@ -55,7 +56,7 @@ ecofont/
 ## 4. 작업 흐름 (AI-DLC)
 
 ```
-INCEPTION (완료) → CONSTRUCTION (진입 직전) → OPERATIONS
+INCEPTION (완료) → CONSTRUCTION (Unit 2 Code Generation 완료, Unit 1a/1b/3/4 진행 대기) → OPERATIONS
 ```
 
 - 현재 상태: `aidlc-docs/aidlc-state.md`
@@ -116,7 +117,7 @@ INCEPTION (완료) → CONSTRUCTION (진입 직전) → OPERATIONS
 |------|-----------|
 | `vision_document.md` | 비즈니스 목표, MVP 범위, 성공 지표, 리스크 |
 | `tech_stack.md` | 확정된 기술 스택과 근거 |
-| `infrastructure.md` | Terraform 코드, GCP 리소스 스펙 (※ `infra/` 생성 시 코드는 `infra/`로 이전) |
+| `infrastructure.md` | 팀 원본 초안 스펙 (※ 최종 코드는 `infra/`로 이전됨, Construction-stage final 스펙은 `aidlc-docs/construction/unit-2/infrastructure-design.md`) |
 | `project-setup.md` | 로컬 개발 환경 세팅, Prerequisites, 배포 명령어 |
 | `task_assignment.md` | 팀원 역할·태스크, 주차별 스프린트 |
 
@@ -128,14 +129,28 @@ INCEPTION (완료) → CONSTRUCTION (진입 직전) → OPERATIONS
 | `audit.md` | 모든 결정·대화 이력 |
 | `inception/requirements/requirements.md` | FR-1~7, NFR-1~6 명세 |
 | `inception/application-design/` | 컴포넌트·서비스·유닛 설계, 의존 관계 |
+| `construction/unit-2/functional-design.md` | Unit 2 API 계약 + Q1~Q4 결정 |
+| `construction/unit-2/nfr-requirements.md` | Unit 2 NFR-U2-* 22 항목 + 측정 기준 |
+| `construction/unit-2/nfr-design.md` | uv·structlog·Dockerfile 등 NFR 구현 매핑 |
+| `construction/unit-2/infrastructure-design.md` | Cloud Run·GCS·IAM 최종 Terraform 스펙 + Delta 표 |
+
+**`apps/`·`infra/` README**
+
+| 경로 | 찾는 정보 |
+|------|-----------|
+| `apps/backend/README.md` | Backend 로컬 실행·컨테이너 빌드·아키텍처 요약 |
+| `apps/ai-engine/README.md` | 우제·동현 Unit 3 시작 가이드 (인터페이스 계약, 통합 절차) |
+| `infra/README.md` | Terraform 배포 절차, idle 비용, NFR 매핑, 후속 의제 |
 
 ---
 
 ## 8. 미결정 사항 (Open Items)
 
-- CO2 환산 계수 논문/보고서 근거 확정
-- CI/CD 파이프라인 구성 여부
-- OCR 검증 대상 언어 범위
-- Cloud Run concurrency 실측 후 조정
+- **Open-1**: 잉크 절약률 산출 방법 — Code Generation에서 placeholder (좌표 수 비교) 적용 중, Week 3 전 결정 필요 (이소은 + 이우제)
+- **Open-2**: CO2 환산 계수 논문/보고서 근거 — placeholder 0.005 g/단위, Week 3 전 결정 (이소은)
+- **Open-3**: CI/CD 파이프라인 — Vercel(FE) + GitHub Actions→GCP(BE) 자동 배포 (후속 의제)
+- OCR 검증 대상 언어 범위 (류동현)
 
-상세: `docs/task_assignment.md` 하단, `docs/infrastructure.md` 하단.
+해결된 항목 (참조): Cloud Run concurrency = 1 (NFR-U2-REL-3), 의존성 도구 = uv (Open-4), 베이스 이미지 = python:3.11-slim-bookworm (Open-5).
+
+상세: `aidlc-docs/construction/unit-2/*.md` 각 §Open Items, `docs/task_assignment.md` 하단.
