@@ -93,6 +93,7 @@ INCEPTION (완료) → CONSTRUCTION (Unit 2 Code Generation 완료, Unit 1a/1b/3
 | 5.4 | **`audit.md`는 append/edit 전용.** 전체 덮어쓰기 금지. 타임스탬프 ISO 8601, 사용자 원문 그대로. |
 | 5.5 | **단계 승인은 2-옵션.** "변경 요청" / "다음 단계 진행"만 제시. 즉흥적 메뉴 금지. |
 | 5.6 | **프롬프트 묶기.** 같은 주제는 한 번에, 무관한 변경은 분리. |
+| 5.7 | **SSOT 페이지(`status.html`) 갱신.** 다음 마일스톤 트리거 발생 시 같은 PR에 묶어 갱신: ① AI-DLC 단계 전환, ② 유닛 상태 변경(시작·완료·블록), ③ Open Item 해결 또는 신규 추가, ④ 마일스톤 PR 머지, ⑤ 외부 리소스 변경(배포 URL·GCP 프로젝트 ID 등). 단순 코드 수정·typo·문서 정합은 트리거 아님. 갱신 시 footer "작성 시점" 도 동시 업데이트. |
 
 ---
 
@@ -134,13 +135,14 @@ INCEPTION (완료) → CONSTRUCTION (Unit 2 Code Generation 완료, Unit 1a/1b/3
 | `construction/unit-2/nfr-design.md` | uv·structlog·Dockerfile 등 NFR 구현 매핑 |
 | `construction/unit-2/infrastructure-design.md` | Cloud Run·GCS·IAM 최종 Terraform 스펙 + Delta 표 |
 
-**`apps/`·`infra/` README**
+**`apps/`·`infra/` README + 루트**
 
 | 경로 | 찾는 정보 |
 |------|-----------|
 | `apps/backend/README.md` | Backend 로컬 실행·컨테이너 빌드·아키텍처 요약 |
 | `apps/ai-engine/README.md` | 우제·동현 Unit 3 시작 가이드 (인터페이스 계약, 통합 절차) |
 | `infra/README.md` | Terraform 배포 절차, idle 비용, NFR 매핑, 후속 의제 |
+| `status.html` | 팀 SSOT 대시보드 — 진행·결정·문서 위치 한눈에 (브라우저로 열기, 마일스톤 시 갱신 → 규칙 5.7) |
 
 ---
 
