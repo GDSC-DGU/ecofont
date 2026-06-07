@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Eco-Font · 프로젝트 현황</title>
+    <style>
+      :root {
+        --bg: #fafafa;
+        --surface: #ffffff;
+        --border: #e5e7eb;
+        --text: #111827;
+        --text-muted: #6b7280;
+        --accent: #2563eb;
+        --green: #10b981;
+        --blue: #3b82f6;
+        --amber: #f59e0b;
+        --red: #ef4444;
+        --gray: #9ca3af;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+          "Noto Sans KR", "Malgun Gothic", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+        font-size: 15px;
+      }
+      .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px 64px; }
+      header { margin-bottom: 32px; }
+      header h1 {
+        margin: 0 0 4px;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+      }
+      header .subtitle { color: var(--text-muted); font-size: 14px; }
+      header .meta {
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      h2 {
+        margin: 40px 0 16px;
+        font-size: 18px;
+        letter-spacing: -0.01em;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+      }
+      h3 { margin: 20px 0 8px; font-size: 15px; }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 18px 20px;
+        margin-bottom: 12px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      th { font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+      tbody tr:last-child td { border-bottom: none; }
+      code {
+        font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
+        font-size: 13px;
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .pill {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .pill-done { background: #d1fae5; color: #065f46; }
+      .pill-progress { background: #dbeafe; color: #1e40af; }
+      .pill-pending { background: #fef3c7; color: #92400e; }
+      .pill-blocked { background: #fee2e2; color: #991b1b; }
+      .pill-idle { background: #f3f4f6; color: #374151; }
+      .progress-bar {
+        display: flex;
+        height: 28px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+      .progress-bar > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: white;
+        font-weight: 600;
+      }
+      .ps-inception { background: var(--green); flex: 1; }
+      .ps-construction { background: var(--blue); flex: 1.6; }
+      .ps-operations { background: var(--gray); flex: 1; }
+      ul.tight { margin: 6px 0; padding-left: 22px; }
+      ul.tight li { margin: 3px 0; }
+      .open-item {
+        border-left: 3px solid var(--amber);
+        padding: 10px 14px;
+        background: #fffbeb;
+        border-radius: 0 6px 6px 0;
+        margin-bottom: 10px;
+      }
+      .open-item.critical { border-left-color: var(--red); background: #fef2f2; }
+      .open-item.resolved { border-left-color: var(--green); background: #ecfdf5; }
+      .open-item .header-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+      .open-item .id { font-weight: 700; }
+      .open-item .body { font-size: 14px; margin-top: 4px; color: #374151; }
+      .open-item .owner { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+      .footer {
+        margin-top: 48px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      .section-intro { color: var(--text-muted); margin-bottom: 14px; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Eco-Font · 프로젝트 현황</h1>
+        <div class="subtitle">팀 SSOT — 진행 상태, 필요한 결정, 문서 위치를 한 곳에서</div>
+        <div class="meta">
+          <strong>한 줄 요약</strong>: 사용자가 업로드한 <code>.ttf</code> 폰트를 AI 기반으로 잉크 절약형 에코폰트로 변환하는 웹 플랫폼 (MVP 1개월, 대학생 4인 팀) ·
+          <strong>최종 업데이트</strong>: 2026-06-07
+        </div>
+      </header>
+
+      <!-- ============================== -->
+      <h2>1. AI-DLC 단계 진행</h2>
+      <div class="card">
+        <div>
+          <span class="pill pill-done">INCEPTION 완료</span>
+          <span class="pill pill-progress">CONSTRUCTION 진행 중</span>
+          <span class="pill pill-idle">OPERATIONS 미진입</span>
+        </div>
+        <div class="progress-bar" aria-label="AI-DLC 진행 막대">
+          <div class="ps-inception">Inception ✓</div>
+          <div class="ps-construction">Construction 중 (Unit 2 코드 생성 완료)</div>
+          <div class="ps-operations">Operations</div>
+        </div>
+        <div style="margin-top: 14px; font-size: 14px; color: var(--text-muted)">
+          현재 상태 원본: <a href="aidlc-docs/aidlc-state.md"><code>aidlc-docs/aidlc-state.md</code></a> · 의사결정 이력: <a href="aidlc-docs/audit.md"><code>aidlc-docs/audit.md</code></a>
+        </div>
+      </div>
+
+      <!-- ============================== -->
+      <h2>2. 유닛별 상태</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>유닛</th>
+              <th>담당</th>
+              <th>상태</th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Unit 1a</strong><br/>Frontend UI</td>
+              <td>이정선 / 류동현</td>
+              <td><span class="pill pill-pending">Construction 미시작</span></td>
+              <td>mock 기반 UI 완성. API 계약은 <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3</a>에 확정 — 폴링 패턴 mock 작성 가능</td>
+            </tr>
+            <tr>
+              <td><strong>Unit 2</strong><br/>Backend</td>
+              <td>이소은</td>
+              <td><span class="pill pill-progress">Code Gen 완료, Build &amp; Test 대기</span></td>
+              <td>PR #8·#9·#10 머지 완료. <code>uv sync</code> + <code>docker build</code> + 로컬 가동 검증 진행 예정</td>
+            </tr>
+            <tr>
+              <td><strong>Unit 3</strong><br/>AI Engine</td>
+              <td>이우제 / 류동현</td>
+              <td><span class="pill pill-pending">시작 대기</span></td>
+              <td>시작 가이드: <a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a>. Backend 통합 지점은 identity placeholder로 준비됨</td>
+            </tr>
+            <tr>
+              <td><strong>Unit 1b</strong><br/>Frontend API 연동</td>
+              <td>이정선 / 류동현</td>
+              <td><span class="pill pill-blocked">Unit 2 Build &amp; Test 후 가능</span></td>
+              <td>Unit 1a 완료 + Backend 가동 확인 후 진입</td>
+            </tr>
+            <tr>
+              <td><strong>Unit 4</strong><br/>Infrastructure</td>
+              <td>이소은</td>
+              <td><span class="pill pill-progress">코드 생성 완료, GCP 프로비저닝 대기</span></td>
+              <td>Terraform 코드 PR #10 포함. I-1 GCP 프로젝트 + I-2 상태 버킷 수동 생성 필요</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top: 12px; font-size: 14px; color: var(--text-muted)">
+          유닛 설계 상세: <a href="aidlc-docs/inception/application-design/unit-of-work.md"><code>aidlc-docs/inception/application-design/unit-of-work.md</code></a>
+        </div>
+      </div>
+
+      <!-- ============================== -->
+      <h2>3. 팀원별 다음 할 일</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>이소은 (Backend + Infra)</h3>
+          <ul class="tight">
+            <li>PR #10 머지 후 <code>cd apps/backend &amp;&amp; uv sync</code> → <code>uv.lock</code> 생성</li>
+            <li>로컬 가동: <code>uv run uvicorn app.main:app --reload</code> + <code>/health</code>·<code>/convert</code> smoke test</li>
+            <li>Docker 빌드: <code>docker build -t ecofont-backend:0.1.0 apps/backend</code></li>
+            <li>I-1: GCP 프로젝트 + API 7개 활성화 (자세한 명령: <a href="infra/README.md"><code>infra/README.md</code></a>)</li>
+            <li>I-2: <code>gsutil mb -l asia-northeast3 -b on gs://ecofont-terraform-state</code></li>
+            <li><strong>Open-1·Open-2 협의</strong>: 우제와 잉크 절약률 산출법, CO2 계수 결정</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>이정선 (Frontend 주)</h3>
+          <ul class="tight">
+            <li>Unit 1a Construction 시작 — Functional Design 단계부터</li>
+            <li>Mock 데이터로 폴링 패턴 구현 (<code>POST /convert</code> → 202 → <code>GET /jobs/{id}</code> 2~3초 폴링)</li>
+            <li>참조: <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3 API 계약</a></li>
+            <li>FR-1 파일 업로드 UI 마무리 + FR-5 결과 화면</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>이우제 (AI 총괄)</h3>
+          <ul class="tight">
+            <li><a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a> 정독 → SSIM 최적화 프로토타입 시작</li>
+            <li>인터페이스 계약 (변경 금지): <code>optimize_glyphs(GlyphData) → GlyphData</code></li>
+            <li>소은과 Open-1 (잉크 절약률 산출법) 협의</li>
+            <li>Week 2 SSIM 손실 함수 구현 진입</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>류동현 (Frontend 지원 + OCR)</h3>
+          <ul class="tight">
+            <li>Vercel 배포 점검 (완료) — 환경변수 <code>NEXT_PUBLIC_BACKEND_URL</code> 은 Backend Cloud Run 배포 후 추가</li>
+            <li>콜드 스타트 로딩 UI (FR-7) — 폴링 첫 응답 전까지 표시</li>
+            <li>OCR 모델 조사: Tesseract / EasyOCR / PaddleOCR 비교 → 선정</li>
+            <li>OCR 인식 대상 언어 범위 정의 (소수 민족 언어 포함 여부)</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 8px; font-size: 14px; color: var(--text-muted)">
+        역할·주차 계획 원본: <a href="docs/task_assignment.md"><code>docs/task_assignment.md</code></a>
+      </div>
+
+      <!-- ============================== -->
+      <h2>4. 결정이 필요한 사항 (Open Items)</h2>
+      <div class="section-intro">⚠️ 표시된 항목은 후속 작업의 선행 조건. 노란 배경은 일반 대기, 빨간 배경은 우선 결정 필요.</div>
+
+      <div class="open-item critical">
+        <div class="header-row">
+          <span class="id">Open-1 · 잉크 절약률 산출 방법</span>
+          <span class="pill pill-blocked">우선 결정</span>
+        </div>
+        <div class="body">
+          후보: 300 DPI 벡터 면적 비교 / 외곽선 길이 비교 / 픽셀 커버리지 측정. 현재 <code>app/domain/metrics_calculator.py</code> 가 좌표 수 비교 placeholder.
+          <br/>우제의 SSIM 최적화 첫 프로토타입 직후 협의 권장.
+        </div>
+        <div class="owner">담당: 이소은 + 이우제 · 데드라인: Week 3 진입 전 (B-3 시작 전)</div>
+      </div>
+
+      <div class="open-item critical">
+        <div class="header-row">
+          <span class="id">Open-2 · CO2 환산 계수</span>
+          <span class="pill pill-blocked">우선 결정</span>
+        </div>
+        <div class="body">
+          잉크량(ml) → CO2(g) 환산 공식. 논문/보고서 근거 확보 필요. 현재 placeholder <code>0.005 g/단위</code>.
+        </div>
+        <div class="owner">담당: 이소은 · 데드라인: Week 3 진입 전 (B-4 시작 전)</div>
+      </div>
+
+      <div class="open-item">
+        <div class="header-row">
+          <span class="id">Open-3 · CI/CD 파이프라인</span>
+          <span class="pill pill-pending">후속 의제</span>
+        </div>
+        <div class="body">
+          Vercel(FE) 자동 배포 + GitHub Actions → GCP(BE) 자동 배포. MVP 코어 완료 후. 현재는 수동 <code>docker build/push</code> + <code>terraform apply</code>.
+        </div>
+        <div class="owner">담당: 팀 합의 (소은 인프라 측 주도 가능)</div>
+      </div>
+
+      <div class="open-item">
+        <div class="header-row">
+          <span class="id">OCR 검증 언어 범위</span>
+          <span class="pill pill-pending">조사 필요</span>
+        </div>
+        <div class="body">
+          한글·영문 + 소수 민족 언어 어디까지 검증할지. OCR 모델 선정 결과에 영향.
+        </div>
+        <div class="owner">담당: 류동현</div>
+      </div>
+
+      <div class="open-item resolved">
+        <div class="header-row">
+          <span class="id">✅ 해결된 결정 (참조)</span>
+          <span class="pill pill-done">resolved</span>
+        </div>
+        <div class="body">
+          <ul class="tight">
+            <li><strong>Q1</strong> Backend↔AI 통합 = 단일 Cloud Run + 함수 호출</li>
+            <li><strong>Q2</strong> API 호출 = 비동기 폴링 (POST /convert 202 + GET /jobs/{id})</li>
+            <li><strong>Q3</strong> 다운로드 = GCS Signed URL TTL 24h</li>
+            <li><strong>Q4</strong> Backend 구조 = Hexagonal + Light DDD</li>
+            <li><strong>Open-4</strong> 의존성 도구 = uv</li>
+            <li><strong>Open-5</strong> 베이스 이미지 = python:3.11-slim-bookworm</li>
+            <li><strong>HTTPS</strong> = Cloud Run default 자동 적용 (NFR-U2-SEC-5)</li>
+            <li><strong>Idle 비용</strong> = min_instances=0 + Lifecycle 1d → 거의 $0</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============================== -->
+      <h2>5. 문서 인덱스</h2>
+
+      <h3>팀 원본 (<code>docs/</code> — 직접 관리)</h3>
+      <div class="card">
+        <table>
+          <tbody>
+            <tr><td><a href="docs/vision_document.md"><code>vision_document.md</code></a></td><td>비즈니스 목표, MVP 범위, 성공 지표</td></tr>
+            <tr><td><a href="docs/tech_stack.md"><code>tech_stack.md</code></a></td><td>기술 스택과 근거</td></tr>
+            <tr><td><a href="docs/infrastructure.md"><code>infrastructure.md</code></a></td><td>초기 인프라 스펙 (※ 최종 코드는 <code>infra/</code>, Construction 스펙은 아래)</td></tr>
+            <tr><td><a href="docs/project-setup.md"><code>project-setup.md</code></a></td><td>로컬 개발 환경 세팅</td></tr>
+            <tr><td><a href="docs/task_assignment.md"><code>task_assignment.md</code></a></td><td>역할·태스크·주차별 스프린트</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>AI-DLC 산출물 (<code>aidlc-docs/</code>)</h3>
+      <div class="card">
+        <table>
+          <tbody>
+            <tr><td><a href="aidlc-docs/aidlc-state.md"><code>aidlc-state.md</code></a></td><td>현재 단계 (항상 최신)</td></tr>
+            <tr><td><a href="aidlc-docs/audit.md"><code>audit.md</code></a></td><td>모든 결정·대화 이력 (append-only)</td></tr>
+            <tr><td><a href="aidlc-docs/inception/requirements/requirements.md"><code>inception/requirements/requirements.md</code></a></td><td>FR-1~7, NFR-1~6 명세</td></tr>
+            <tr><td><a href="aidlc-docs/inception/application-design/"><code>inception/application-design/</code></a></td><td>컴포넌트·서비스·유닛 설계</td></tr>
+            <tr><td><a href="aidlc-docs/construction/unit-2/functional-design.md"><code>construction/unit-2/functional-design.md</code></a></td><td>Unit 2 API 계약 + Q1~Q4 결정</td></tr>
+            <tr><td><a href="aidlc-docs/construction/unit-2/nfr-requirements.md"><code>construction/unit-2/nfr-requirements.md</code></a></td><td>Unit 2 NFR-U2-* 22 항목 + 측정 기준</td></tr>
+            <tr><td><a href="aidlc-docs/construction/unit-2/nfr-design.md"><code>construction/unit-2/nfr-design.md</code></a></td><td>uv·structlog·Dockerfile 등 NFR 구현 매핑</td></tr>
+            <tr><td><a href="aidlc-docs/construction/unit-2/infrastructure-design.md"><code>construction/unit-2/infrastructure-design.md</code></a></td><td>Cloud Run·GCS·IAM 최종 Terraform 스펙</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>코드 영역 README</h3>
+      <div class="card">
+        <table>
+          <tbody>
+            <tr><td><a href="apps/backend/README.md"><code>apps/backend/README.md</code></a></td><td>Backend 로컬 실행·컨테이너 빌드·아키텍처 요약</td></tr>
+            <tr><td><a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a></td><td>우제·동현 Unit 3 시작 가이드</td></tr>
+            <tr><td><a href="infra/README.md"><code>infra/README.md</code></a></td><td>Terraform 배포 절차, idle 비용, NFR 매핑</td></tr>
+            <tr><td><a href="CLAUDE.md"><code>CLAUDE.md</code></a></td><td>AI(Claude Code)용 프로젝트 가이드 — AI 협업 시 진입점</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ============================== -->
+      <h2>6. 외부 리소스</h2>
+      <div class="card">
+        <table>
+          <tbody>
+            <tr><td>GitHub Repository</td><td><a href="https://github.com/GDSC-DGU/ecofont">GDSC-DGU/ecofont</a></td></tr>
+            <tr><td>Frontend 배포 (Vercel)</td><td><a href="https://ecofont.vercel.app/">https://ecofont.vercel.app/</a></td></tr>
+            <tr><td>Backend 배포 (Cloud Run)</td><td>미배포 — I-1·I-2·I-3 (소은) 진행 후</td></tr>
+            <tr><td>머지된 PR — Functional Design + NFR Requirements</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/8">#8</a></td></tr>
+            <tr><td>머지된 PR — NFR Design + Infrastructure Design</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/9">#9</a></td></tr>
+            <tr><td>머지된 PR — Code Generation + onboarding + 정합</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/10">#10</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ============================== -->
+      <div class="footer">
+        <strong>이 페이지는 스냅샷입니다.</strong> 최신 상태는 항상 <a href="aidlc-docs/aidlc-state.md"><code>aidlc-docs/aidlc-state.md</code></a> 가 권위. 본 페이지는 의사결정 마일스톤 시 수동 갱신.<br/>
+        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-07 (Unit 2 Code Generation 완료 직후)
+      </div>
+    </div>
+  </body>
+</html>
