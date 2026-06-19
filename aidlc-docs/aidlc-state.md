@@ -4,8 +4,8 @@
 
 - **Project Type**: Brownfield
 - **Start Date**: 2026-05-12T00:00:00Z
-- **Last Updated**: 2026-06-07T16:00:00Z
-- **Current Stage**: CONSTRUCTION / Unit 2 Code Generation (커밋 직전)
+- **Last Updated**: 2026-06-19T00:00:00Z
+- **Current Stage**: CONSTRUCTION / Unit 1a·1b·2 develop 머지 완료 — Unit 2 로컬 Build & Test + Unit 3·4 프로비저닝 대기
 
 ## Workspace State
 
@@ -59,17 +59,18 @@
 ## Current Status
 
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 1b (Frontend API 연동 Mock) — Build and Test 완료
-- **Next Stage**: Unit 2 Build and Test (로컬 `uv sync` / docker build / 가동) 또는 Unit 3 시작 (우제) → 완료 후 Unit 1b 실 API 연결
-- **Status**: 커밋·푸시·PR 직전
-- **생성 산출물 (40 파일)**:
-  - `apps/backend/` 30 파일 (Python 25 + pyproject.toml + Dockerfile + .dockerignore + .env.example + README)
-  - `apps/ai-engine/README.md` (우제 onboarding)
-  - `infra/` 9 파일 (Terraform 7 + tfvars.example + README)
-- **수정 산출물**: `CLAUDE.md` (디렉토리 트리·문서 인덱스·Open Items 동기화), `apps/backend/README.md` (ai-engine 링크), `apps/backend/app/adapters/outbound/inprocess_ai_engine.py` (onboarding 참조), `infra/README.md` (idle 비용 + 후속 의제)
-- **검증 통과**: Python AST parse 25/25, ruff/pyright/terraform fmt는 로컬 실행 필요
+- **머지 완료 (develop)**:
+  - Unit 1a Frontend UI — PR #14 (mock 변환 + FontFace 미리보기 + 비교 입력 UI)
+  - Unit 1b Frontend API 연동 (mock 폴링) — PR #14
+  - Unit 2 Backend Functional/NFR/Infra Design + Code Generation — PR #8·#9·#10
+  - 팀 SSOT 페이지(`status.html`) + CLAUDE.md §5.7 — PR #11
+- **Next Stage (우선순위 순)**:
+  1. Unit 2 로컬 Build & Test — `cd apps/backend && uv sync` (→ `uv.lock`) / `uv run uvicorn app.main:app --reload` smoke / `docker build` (이소은)
+  2. Open-1 잉크 절약률 산출법, Open-2 CO2 계수 결정 (이소은 + 이우제)
+  3. Unit 3 AI Engine 시작 (이우제·류동현) / Unit 4 GCP 프로비저닝 (이소은)
+  4. Unit 3·4 완료 후 → Unit 1b 실 API 연결 (`src/mocks/convertFont.ts` 교체)
+- **검증 상태**: Python AST parse 25/25 통과. `uv.lock` 미생성 → Unit 2 로컬 Build & Test 미실행. ruff/pyright/terraform fmt 로컬 실행 필요
 - **남은 Open Items**: Open-1 잉크 산출법 (placeholder=좌표 수 비교), Open-2 CO2 계수 (placeholder=0.005g/단위), Open-3 CI/CD, OCR 언어 범위
 - **결정된 운영 원칙**: HTTPS는 Cloud Run 기본 자동 적용(NFR-U2-SEC-5), idle 시 GCP $0 (min_instances=0 + Lifecycle 1d)
-- **AI Engine 의존**: `inprocess_ai_engine.py` identity placeholder — `apps/ai-engine/README.md` 가 우제 시작 시점 가이드
-- **작업 브랜치**: `feat/unit-2-backend-codegen` (develop에서 분기, 미커밋) / `feat-comparison-ui` (Unit 1a, 완료)
-- **Unit 1a**: Functional Design → Code Generation → Build and Test 전 구간 완료
+- **AI Engine 의존**: `apps/backend/app/adapters/outbound/inprocess_ai_engine.py` identity placeholder — `apps/ai-engine/README.md` 가 우제 시작 시점 가이드
+- **현재 브랜치**: `develop` (Unit 1a/1b/2 모두 머지 완료, 미커밋 변경 없음)

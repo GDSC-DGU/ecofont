@@ -21,3 +21,5 @@ infra/.terraform.lock.hcl
 .DS_Store
 .history
 .pnpm-store/
+.idea/
+.vscode/
