@@ -1,8 +1,8 @@
 resource "google_cloud_run_v2_service" "backend" {
-  name                = "ecofont-backend"
-  location            = var.region
-  ingress             = "INGRESS_TRAFFIC_ALL"
-  deletion_protection = false
+  name     = "ecofont-backend"
+  location = var.region
+  ingress  = "INGRESS_TRAFFIC_ALL"
+  # deletion_protection 은 google provider 6.x+ 전용 → ~> 5.0 핀에서는 생략 (5.x 미지원)
 
   template {
     service_account                  = google_service_account.backend.email
