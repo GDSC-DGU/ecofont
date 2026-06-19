@@ -74,7 +74,7 @@ export function FileUpload() {
         </p>
       ) : null}
 
-      <StartConversionButton disabled={!selectedFile} />
+      <StartConversionButton file={selectedFile} />
     </section>
   );
 }

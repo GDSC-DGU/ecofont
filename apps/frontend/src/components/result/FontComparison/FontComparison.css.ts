@@ -55,3 +55,42 @@ export const sample = style({
 export const optimized = style({
   color: vars.color.primary,
 });
+
+export const samplePlaceholder = style({
+  margin: 0,
+  color: vars.color.textMuted,
+  fontSize: "34px",
+  fontWeight: 800,
+  lineHeight: 1.18,
+});
+
+export const inputWrapper = style({
+  marginTop: vars.space.md,
+  display: "flex",
+  flexDirection: "column",
+  gap: vars.space.sm,
+});
+
+export const inputLabel = style({
+  margin: 0,
+  color: vars.color.textMuted,
+  fontSize: "13px",
+  fontWeight: 600,
+});
+
+export const input = style({
+  width: "100%",
+  padding: `${vars.space.sm} ${vars.space.md}`,
+  border: `1px solid ${vars.color.border}`,
+  borderRadius: vars.radius.sm,
+  fontSize: "16px",
+  background: vars.color.surface,
+  color: vars.color.text,
+  outline: "none",
+  boxSizing: "border-box",
+  selectors: {
+    "&:focus": {
+      borderColor: vars.color.primary,
+    },
+  },
+});

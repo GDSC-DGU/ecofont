@@ -12,6 +12,11 @@ export const button = style({
   border: 0,
   borderRadius: vars.radius.sm,
   fontWeight: 700,
-  cursor: "not-allowed",
-  opacity: 0.72,
+  cursor: "pointer",
+  selectors: {
+    "&:disabled": {
+      cursor: "not-allowed",
+      opacity: 0.72,
+    },
+  },
 });
