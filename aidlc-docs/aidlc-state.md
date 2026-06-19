@@ -49,8 +49,8 @@
 - [x] NFR Requirements — Unit 2 22개 NFR-U2-\* 항목 승인 완료 (PR #8 merged)
 - [x] NFR Design — Unit 2 9개 결정 승인 완료 (PR #9 merged)
 - [x] Infrastructure Design — Unit 2 9개 INFRA-\* 결정 승인 완료 (PR #9 merged)
-- [x] Code Generation — Unit 1a (완료), Unit 2 apps/backend + infra 코드 생성 완료, 승인 대기
-- [x] Build and Test — Unit 1a (완료) / Unit 2 미실행
+- [x] Code Generation — Unit 1a (완료), Unit 1b (완료), Unit 2 apps/backend + infra 코드 생성 완료, 승인 대기
+- [x] Build and Test — Unit 1a (완료), Unit 1b (완료) / Unit 2 미실행
 
 ### OPERATIONS PHASE
 
@@ -59,8 +59,8 @@
 ## Current Status
 
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 2 (Backend) — Code Generation 완료 + Unit 3 onboarding 문서 + 후속 의제 트래킹 + CLAUDE.md 정합
-- **Next Stage**: Unit 2 Build and Test (로컬 `uv sync` / docker build / 가동) 또는 Unit 3 시작 (우제)
+- **Current Stage**: Unit 1b (Frontend API 연동 Mock) — Build and Test 완료
+- **Next Stage**: Unit 2 Build and Test (로컬 `uv sync` / docker build / 가동) 또는 Unit 3 시작 (우제) → 완료 후 Unit 1b 실 API 연결
 - **Status**: 커밋·푸시·PR 직전
 - **생성 산출물 (40 파일)**:
   - `apps/backend/` 30 파일 (Python 25 + pyproject.toml + Dockerfile + .dockerignore + .env.example + README)

@@ -5,7 +5,10 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 export type ConversionResult = {
   originalFile: File;
   convertedBlob: Blob;
+  downloadUrl: string;
   convertedFileName: string;
+  inkSavingRate: number;
+  carbonReduction: number;
 };
 
 type ConversionContextValue = {

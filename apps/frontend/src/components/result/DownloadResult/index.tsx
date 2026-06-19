@@ -9,12 +9,10 @@ export function DownloadResult() {
 
   const handleDownload = () => {
     if (!result) return;
-    const url = URL.createObjectURL(result.convertedBlob);
     const a = document.createElement("a");
-    a.href = url;
+    a.href = result.downloadUrl;
     a.download = result.convertedFileName;
     a.click();
-    URL.revokeObjectURL(url);
   };
 
   return (

@@ -6,7 +6,7 @@ import { copy } from "@/constants/copy";
 import * as styles from "./StartConversionButton.css";
 
 export function StartConversionButton({ file }: { file: File | null }) {
-  const { convert, isLoading, error } = useConvertFont();
+  const { convert, isLoading, stage, error } = useConvertFont();
 
   return (
     <>
@@ -26,7 +26,7 @@ export function StartConversionButton({ file }: { file: File | null }) {
           </p>
         ) : null}
       </div>
-      {isLoading ? <LoadingOverlay /> : null}
+      {isLoading ? <LoadingOverlay stage={stage} /> : null}
     </>
   );
 }

@@ -206,3 +206,39 @@
 **Context**: Construction Phase 완료 → Operations Phase
 
 ---
+
+## Unit 1b Functional Design 승인
+
+**Timestamp**: 2026-06-19T10:00:00Z
+**User Input**: "다음 단계 진행"
+**AI Response**: Unit 1b Functional Design 완료. API 스펙 기반 폴링 시뮬레이션 설계 확정. fetch(downloadUrl) 단계 포함으로 실 API 연결 시 코드 경로 동일. ConversionResult 타입 확장 (downloadUrl, inkSavingRate, carbonReduction).
+**Context**: Construction Phase - Unit 1b Functional Design 승인
+
+---
+
+## Unit 1b Code Generation Plan 승인
+
+**Timestamp**: 2026-06-19T10:10:00Z
+**User Input**: "다음 단계 진행"
+**AI Response**: Unit 1b Code Generation Plan 9단계 확정. aidlc-docs/construction/plans/unit-1b-code-generation-plan.md 생성.
+**Context**: Construction Phase - Unit 1b Code Generation Plan 승인
+
+---
+
+## Unit 1b Code Generation 완료
+
+**Timestamp**: 2026-06-19T10:20:00Z
+**User Input**: "다음 단계 진행"
+**AI Response**: Unit 1b 9개 파일 수정/교체 완료. pnpm build 성공, tsc --noEmit 타입 에러 0. 폴링 시뮬레이션(startConversion + pollJob) + fetch(downloadUrl) → Blob 흐름 구현. ResultMetrics 실제 지표 표시.
+**Context**: Construction Phase - Unit 1b Code Generation 완료
+
+---
+
+## Unit 1b Build and Test 완료
+
+**Timestamp**: 2026-06-19T10:25:00Z
+**User Input**: "다음 단계 진행"
+**AI Response**: pnpm build 성공. 수동 검증 체크리스트 unit-1b-build-and-test-summary.md 생성. aidlc-state.md Unit 1b 항목 업데이트.
+**Context**: Construction Phase - Unit 1b Build and Test 완료
+
+---

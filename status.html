@@ -158,7 +158,7 @@
         </div>
         <div class="progress-bar" aria-label="AI-DLC 진행 막대">
           <div class="ps-inception">Inception ✓</div>
-          <div class="ps-construction">Construction 중 (Unit 1a 완료 / Unit 2 코드 생성 완료)</div>
+          <div class="ps-construction">Construction 중 (Unit 1a·1b 완료 / Unit 2 코드 생성 완료)</div>
           <div class="ps-operations">Operations</div>
         </div>
         <div style="margin-top: 14px; font-size: 14px; color: var(--text-muted)">
@@ -183,7 +183,13 @@
               <td><strong>Unit 1a</strong><br/>Frontend UI</td>
               <td>이정선 / 류동현</td>
               <td><span class="pill pill-done">완료</span></td>
-              <td>mock 변환 함수 + ConversionContext + FontFace API 렌더링 + 인터랙티브 미리보기 input 구현 완료. 로컬 동작 확인 필요. 산출물: <a href="aidlc-docs/construction/unit-1a/">aidlc-docs/construction/unit-1a/</a></td>
+              <td>mock 변환 함수 + ConversionContext + FontFace API 렌더링 + 인터랙티브 미리보기 input 구현 완료. 산출물: <a href="aidlc-docs/construction/unit-1a/">aidlc-docs/construction/unit-1a/</a></td>
+            </tr>
+            <tr>
+              <td><strong>Unit 1b</strong><br/>Frontend API 연동</td>
+              <td>이정선 / 류동현</td>
+              <td><span class="pill pill-done">완료 (mock 폴링)</span></td>
+              <td>비동기 폴링 시뮬레이션 구현 완료 (POST /convert → GET /jobs 폴링 → fetch(downloadUrl)). Unit 2 배포 후 <code>src/mocks/convertFont.ts</code> → 실 API 교체만 남음. 산출물: <a href="aidlc-docs/construction/plans/unit-1b-code-generation-plan.md">unit-1b-code-generation-plan.md</a></td>
             </tr>
             <tr>
               <td><strong>Unit 2</strong><br/>Backend</td>
@@ -196,12 +202,6 @@
               <td>이우제 / 류동현</td>
               <td><span class="pill pill-pending">시작 대기</span></td>
               <td>시작 가이드: <a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a>. Backend 통합 지점은 identity placeholder로 준비됨</td>
-            </tr>
-            <tr>
-              <td><strong>Unit 1b</strong><br/>Frontend API 연동</td>
-              <td>이정선 / 류동현</td>
-              <td><span class="pill pill-blocked">Unit 2 Build &amp; Test 후 가능</span></td>
-              <td>Unit 1a 완료 + Backend 가동 확인 후 진입</td>
             </tr>
             <tr>
               <td><strong>Unit 4</strong><br/>Infrastructure</td>
@@ -233,9 +233,10 @@
         <div class="card">
           <h3>이정선 (Frontend 주)</h3>
           <ul class="tight">
-            <li>✅ Unit 1a 완료 — <code>pnpm dev</code>로 로컬 동작 확인 후 Week 2 체크리스트 검증</li>
-            <li>체크리스트: <a href="aidlc-docs/construction/build-and-test/build-and-test-summary.md">build-and-test-summary.md</a></li>
-            <li>Unit 1b 대기 중 — Unit 2 Backend 가동 확인 후 <code>src/mocks/convertFont.ts</code>를 실 API 호출로 교체</li>
+            <li>✅ Unit 1a 완료 — mock 변환 + FontFace 미리보기 + 인터랙티브 비교 UI</li>
+            <li>✅ Unit 1b 완료 — 폴링 시뮬레이션 + fetch(downloadUrl) + 실제 지표 표시</li>
+            <li><code>pnpm dev</code>로 로컬 동작 확인 후 커밋 → PR 올리기</li>
+            <li>Unit 2 Backend 배포 후: <code>src/mocks/convertFont.ts</code> → 실 API 호출로 교체 (import 1줄 + fetch 구현)</li>
             <li>실 API 계약 참조: <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3</a></li>
           </ul>
         </div>
@@ -360,6 +361,8 @@
             <tr><td><a href="aidlc-docs/construction/unit-2/infrastructure-design.md"><code>construction/unit-2/infrastructure-design.md</code></a></td><td>Cloud Run·GCS·IAM 최종 Terraform 스펙</td></tr>
             <tr><td><a href="aidlc-docs/construction/unit-1a/functional-design/"><code>construction/unit-1a/functional-design/</code></a></td><td>Unit 1a 설계 (비즈니스 로직·규칙·엔티티·컴포넌트)</td></tr>
             <tr><td><a href="aidlc-docs/construction/build-and-test/build-and-test-summary.md"><code>construction/build-and-test/build-and-test-summary.md</code></a></td><td>Unit 1a Week 2 완료 기준 체크리스트</td></tr>
+            <tr><td><a href="aidlc-docs/construction/plans/unit-1b-code-generation-plan.md"><code>construction/plans/unit-1b-code-generation-plan.md</code></a></td><td>Unit 1b 9단계 코드 생성 플랜 (폴링 시뮬레이션 → fetch → Context)</td></tr>
+            <tr><td><a href="aidlc-docs/construction/build-and-test/unit-1b-build-and-test-summary.md"><code>construction/build-and-test/unit-1b-build-and-test-summary.md</code></a></td><td>Unit 1b 수동 검증 체크리스트 + 실 API 교체 범위</td></tr>
           </tbody>
         </table>
       </div>
@@ -403,7 +406,7 @@
           <li>외부 리소스 변경 (배포 URL, GCP 프로젝트 ID 등)</li>
         </ul>
         AI 협업 시 위 트리거에서 자동 갱신됨. 직접 편집 시 본 파일 + <code>aidlc-docs/aidlc-state.md</code> 함께 확인.<br/>
-        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-19 (Unit 1a Construction 완료 직후)
+        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-19 (Unit 1a·1b Construction 완료 직후)
       </div>
     </div>
   </body>
