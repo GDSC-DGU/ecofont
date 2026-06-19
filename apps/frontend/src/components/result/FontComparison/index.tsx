@@ -1,84 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import TextField from "@mui/material/TextField";
 import { useConversion } from "@/context/ConversionContext";
 import { useFontFaceLoader } from "@/hooks/useFontFaceLoader";
-import { copy } from "@/constants/copy";
-import * as styles from "./FontComparison.css";
 
 export function FontComparison() {
-  const { result } = useConversion();
-  const [previewText, setPreviewText] = useState("");
+  const { result, previewText, setPreviewText } = useConversion();
 
   const originalLoaded = useFontFaceLoader(
     "eco-original",
     result?.originalFile ?? null
   );
-  const convertedLoaded = useFontFaceLoader(
-    "eco-converted",
-    result?.convertedBlob ?? null
-  );
-
-  const displayText = previewText || null;
 
   return (
-    <section className={styles.card}>
-      <h2 className={styles.title}>{copy.result.comparison.title}</h2>
-      <div className={styles.grid}>
-        <PreviewPanel
-          label={copy.result.comparison.originalLabel}
-          text={displayText}
-          placeholder={copy.result.comparison.sample}
-          fontFamily={originalLoaded ? "eco-original" : undefined}
-          data-testid="font-comparison-original"
-        />
-        <PreviewPanel
-          label={copy.result.comparison.optimizedLabel}
-          text={displayText}
-          placeholder={copy.result.comparison.sample}
-          fontFamily={convertedLoaded ? "eco-converted" : undefined}
-          data-testid="font-comparison-converted"
-        />
-      </div>
-      <div className={styles.inputWrapper}>
-        <p className={styles.inputLabel}>미리보기 텍스트 입력</p>
-        <input
-          className={styles.input}
-          type="text"
-          value={previewText}
-          onChange={(e) => setPreviewText(e.target.value)}
-          placeholder={copy.result.comparison.sample}
-          data-testid="font-comparison-input"
-        />
-      </div>
-    </section>
-  );
-}
-
-function PreviewPanel({
-  label,
-  text,
-  placeholder,
-  fontFamily,
-  "data-testid": testId,
-}: {
-  label: string;
-  text: string | null;
-  placeholder: string;
-  fontFamily?: string;
-  "data-testid"?: string;
-}) {
-  const isEmpty = text === null;
-
-  return (
-    <div className={styles.panel} data-testid={testId}>
-      <p className={styles.label}>{label}</p>
-      <p
-        className={isEmpty ? styles.samplePlaceholder : styles.sample}
-        style={fontFamily ? { fontFamily } : undefined}
-      >
-        {isEmpty ? placeholder : text}
-      </p>
-    </div>
+    <TextField
+      fullWidth
+      variant="filled"
+      placeholder="미리보기 텍스트를 입력하세요"
+      value={previewText}
+      onChange={(e) => setPreviewText(e.target.value)}
+      sx={{
+        "& .MuiFilledInput-root": {
+          borderRadius: "9999px",
+          paddingLeft: "24px",
+          paddingRight: "24px",
+          paddingTop: "0px",
+          paddingBottom: "0px",
+          outline: "1.5px solid rgba(218, 225, 240, 0.90)",
+          transition: "outline-color 160ms ease",
+        },
+        "& .MuiFilledInput-root.Mui-focused": {
+          outline: "2px solid #1A73E8",
+        },
+        "& .MuiFilledInput-root::before": { display: "none" },
+        "& .MuiFilledInput-root::after": { display: "none" },
+        "& .MuiInputBase-input": {
+          paddingTop: "16px",
+          paddingBottom: "16px",
+        },
+      }}
+      slotProps={{
+        htmlInput: {
+          "data-testid": "font-comparison-input",
+          "aria-label": "미리보기 텍스트 입력",
+          maxLength: 40,
+          style: {
+            fontFamily: originalLoaded ? "eco-original, sans-serif" : "inherit",
+            fontSize: "24px",
+            lineHeight: 1.4,
+          },
+        },
+      }}
+    />
   );
 }

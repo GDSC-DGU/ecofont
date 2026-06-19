@@ -13,27 +13,32 @@ export const page = style({
 
 export const shell = style({
   width: "100%",
-  maxWidth: "1120px",
+  maxWidth: "100%",
   margin: "0 auto",
   display: "grid",
-  gap: vars.space.lg,
-});
-
-export const top = style({
-  display: "grid",
-  gap: vars.space.md,
+  gap: vars.space.xl,
   "@media": {
+    [media.tablet]: {
+      maxWidth: "860px",
+    },
     [media.desktop]: {
-      gridTemplateColumns: "1fr auto",
-      alignItems: "end",
+      maxWidth: "960px",
     },
   },
+});
+
+export const pageHeader = style({
+  display: "grid",
+  gap: vars.space.md,
+  textAlign: "center",
+  justifyItems: "center",
 });
 
 export const title = style({
   margin: 0,
   fontSize: "32px",
   lineHeight: 1.18,
+  color: vars.color.onSurface,
   wordBreak: "keep-all",
   "@media": {
     [media.tablet]: {
@@ -43,19 +48,16 @@ export const title = style({
 });
 
 export const description = style({
-  maxWidth: "660px",
-  margin: `${vars.space.sm} 0 0`,
-  color: vars.color.textMuted,
-  lineHeight: 1.7,
+  margin: 0,
+  fontSize: "20px",
+  fontWeight: 500,
+  color: vars.color.onSurface,
+  lineHeight: 1.6,
   wordBreak: "keep-all",
-});
-
-export const grid = style({
-  display: "grid",
-  gap: vars.space.lg,
+  whiteSpace: "pre-line",
   "@media": {
-    [media.desktop]: {
-      gridTemplateColumns: "360px 1fr",
+    [media.tablet]: {
+      fontSize: "24px",
     },
   },
 });
