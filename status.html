@@ -144,7 +144,7 @@
         <div class="subtitle">팀 SSOT — 진행 상태, 필요한 결정, 문서 위치를 한 곳에서</div>
         <div class="meta">
           <strong>한 줄 요약</strong>: 사용자가 업로드한 <code>.ttf</code> 폰트를 AI 기반으로 잉크 절약형 에코폰트로 변환하는 웹 플랫폼 (MVP 1개월, 대학생 4인 팀) ·
-          <strong>최종 업데이트</strong>: 2026-06-07
+          <strong>최종 업데이트</strong>: 2026-06-19
         </div>
       </header>
 
@@ -158,7 +158,7 @@
         </div>
         <div class="progress-bar" aria-label="AI-DLC 진행 막대">
           <div class="ps-inception">Inception ✓</div>
-          <div class="ps-construction">Construction 중 (Unit 2 코드 생성 완료)</div>
+          <div class="ps-construction">Construction 중 (Unit 1a 완료 / Unit 2 코드 생성 완료)</div>
           <div class="ps-operations">Operations</div>
         </div>
         <div style="margin-top: 14px; font-size: 14px; color: var(--text-muted)">
@@ -182,8 +182,8 @@
             <tr>
               <td><strong>Unit 1a</strong><br/>Frontend UI</td>
               <td>이정선 / 류동현</td>
-              <td><span class="pill pill-pending">Construction 미시작</span></td>
-              <td>mock 기반 UI 완성. API 계약은 <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3</a>에 확정 — 폴링 패턴 mock 작성 가능</td>
+              <td><span class="pill pill-done">완료</span></td>
+              <td>mock 변환 함수 + ConversionContext + FontFace API 렌더링 + 인터랙티브 미리보기 input 구현 완료. 로컬 동작 확인 필요. 산출물: <a href="aidlc-docs/construction/unit-1a/">aidlc-docs/construction/unit-1a/</a></td>
             </tr>
             <tr>
               <td><strong>Unit 2</strong><br/>Backend</td>
@@ -233,10 +233,10 @@
         <div class="card">
           <h3>이정선 (Frontend 주)</h3>
           <ul class="tight">
-            <li>Unit 1a Construction 시작 — Functional Design 단계부터</li>
-            <li>Mock 데이터로 폴링 패턴 구현 (<code>POST /convert</code> → 202 → <code>GET /jobs/{id}</code> 2~3초 폴링)</li>
-            <li>참조: <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3 API 계약</a></li>
-            <li>FR-1 파일 업로드 UI 마무리 + FR-5 결과 화면</li>
+            <li>✅ Unit 1a 완료 — <code>pnpm dev</code>로 로컬 동작 확인 후 Week 2 체크리스트 검증</li>
+            <li>체크리스트: <a href="aidlc-docs/construction/build-and-test/build-and-test-summary.md">build-and-test-summary.md</a></li>
+            <li>Unit 1b 대기 중 — Unit 2 Backend 가동 확인 후 <code>src/mocks/convertFont.ts</code>를 실 API 호출로 교체</li>
+            <li>실 API 계약 참조: <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3</a></li>
           </ul>
         </div>
         <div class="card">
@@ -358,6 +358,8 @@
             <tr><td><a href="aidlc-docs/construction/unit-2/nfr-requirements.md"><code>construction/unit-2/nfr-requirements.md</code></a></td><td>Unit 2 NFR-U2-* 22 항목 + 측정 기준</td></tr>
             <tr><td><a href="aidlc-docs/construction/unit-2/nfr-design.md"><code>construction/unit-2/nfr-design.md</code></a></td><td>uv·structlog·Dockerfile 등 NFR 구현 매핑</td></tr>
             <tr><td><a href="aidlc-docs/construction/unit-2/infrastructure-design.md"><code>construction/unit-2/infrastructure-design.md</code></a></td><td>Cloud Run·GCS·IAM 최종 Terraform 스펙</td></tr>
+            <tr><td><a href="aidlc-docs/construction/unit-1a/functional-design/"><code>construction/unit-1a/functional-design/</code></a></td><td>Unit 1a 설계 (비즈니스 로직·규칙·엔티티·컴포넌트)</td></tr>
+            <tr><td><a href="aidlc-docs/construction/build-and-test/build-and-test-summary.md"><code>construction/build-and-test/build-and-test-summary.md</code></a></td><td>Unit 1a Week 2 완료 기준 체크리스트</td></tr>
           </tbody>
         </table>
       </div>
@@ -401,7 +403,7 @@
           <li>외부 리소스 변경 (배포 URL, GCP 프로젝트 ID 등)</li>
         </ul>
         AI 협업 시 위 트리거에서 자동 갱신됨. 직접 편집 시 본 파일 + <code>aidlc-docs/aidlc-state.md</code> 함께 확인.<br/>
-        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-07 (Unit 2 Code Generation 완료 직후)
+        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-19 (Unit 1a Construction 완료 직후)
       </div>
     </div>
   </body>

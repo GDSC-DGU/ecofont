@@ -21,6 +21,7 @@ export const copy = {
     removeFileAction: "선택 해제",
     invalidFileError: "TTF 파일만 업로드할 수 있습니다.",
     multipleFilesError: "파일은 하나만 선택할 수 있습니다.",
+    conversionError: "변환 중 오류가 발생했습니다. 다시 시도해 주세요.",
     action: "잉크 다이어트 시작",
     guideSteps: [
       {
