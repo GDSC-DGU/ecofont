@@ -1,6 +1,6 @@
 "use client";
 
-// 파일 변환 흐름(폴링 mock → fetch(downloadUrl) → Context 저장 → /result 이동)과 로딩·단계·에러 상태를 관리하는 훅
+// 파일 변환 흐름(폴링 mock → variants fetch → Context 저장 → /result 이동)과 로딩·단계·에러 상태를 관리하는 훅
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConversion } from "@/context/ConversionContext";
@@ -60,21 +60,24 @@ export function useConvertFont() {
           return;
         }
 
-        // status === "done"
+        // status === "done": blob을 직접 수신 (현재 TTF 직접 전송 구조 임시 시뮬레이션)
+        // TODO(Unit 1b): 백엔드 응답 방식 확정 후 교체
+        //   - TTF 직접 전송 → 현재 코드 유지 (response.blob() 처리로 연결)
+        //   - GCS Signed URL 방식 → fetch(v.download_url).then(r => r.blob()) 로 교체
         setStage("finalizing");
-        const { download_url, ink_saving_rate, carbon_reduction_g, converted_filename } = poll.result;
-
-        const convertedBlob = await fetch(download_url).then((r) => r.blob());
-
-        setResult({
-          originalFile: file,
-          convertedBlob,
-          downloadUrl: download_url,
-          convertedFileName: converted_filename,
-          inkSavingRate: ink_saving_rate,
-          carbonReduction: carbon_reduction_g,
+        const variantResults = poll.result.variants.map((v) => {
+          const blob = v.ttf_blob;
+          const downloadUrl = URL.createObjectURL(blob);
+          return {
+            blob,
+            downloadUrl,
+            fileName: v.converted_filename,
+            inkSavingRate: v.ink_saving_rate,
+            carbonReduction: v.carbon_reduction_g,
+          };
         });
 
+        setResult({ originalFile: file, variants: variantResults });
         router.push("/result");
       } catch {
         clearInterval(intervalRef.current!);

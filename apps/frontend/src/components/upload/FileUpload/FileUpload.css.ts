@@ -6,9 +6,11 @@ export const card = style({
   gap: vars.space.lg,
   padding: vars.space.lg,
   background: vars.color.surface,
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.lg,
-  boxShadow: vars.shadow.subtle,
+  backdropFilter: "blur(24px) saturate(160%)",
+  WebkitBackdropFilter: "blur(24px) saturate(160%)",
+  border: `1px solid ${vars.color.outline}`,
+  borderRadius: vars.shape.extraLarge,
+  boxShadow: vars.elevation.level1,
 });
 
 export const top = style({
@@ -25,20 +27,21 @@ export const top = style({
 export const title = style({
   margin: 0,
   fontSize: "22px",
+  color: vars.color.onSurface,
 });
 
 export const description = style({
   margin: `${vars.space.sm} 0 0`,
-  color: vars.color.textMuted,
+  color: vars.color.onSurfaceVariant,
   lineHeight: 1.6,
 });
 
 export const badge = style({
   width: "fit-content",
   padding: `${vars.space.xs} ${vars.space.sm}`,
-  background: vars.color.primarySoft,
-  color: vars.color.primary,
-  borderRadius: vars.radius.sm,
+  background: vars.color.primaryContainer,
+  color: vars.color.onPrimaryContainer,
+  borderRadius: vars.shape.extraSmall,
   fontSize: "13px",
   fontWeight: 700,
 });
@@ -49,15 +52,17 @@ export const dropzone = style({
   placeItems: "center",
   padding: vars.space.lg,
   textAlign: "center",
-  background: vars.color.surfaceMuted,
-  border: `1px dashed ${vars.color.borderStrong}`,
-  borderRadius: vars.radius.md,
+  background: "rgba(255, 255, 255, 0.38)",
+  border: "1.5px dashed rgba(26, 115, 232, 0.35)",
+  borderRadius: vars.shape.large,
   cursor: "pointer",
-  transition: "border-color 160ms ease, background 160ms ease",
+  transition:
+    "border-color 180ms ease, background 180ms ease, box-shadow 180ms ease",
   selectors: {
     "&:hover": {
-      background: vars.color.primarySoft,
-      borderColor: vars.color.primary,
+      background: "rgba(26, 115, 232, 0.08)",
+      borderColor: "rgba(26, 115, 232, 0.65)",
+      boxShadow: "0 0 0 4px rgba(26, 115, 232, 0.08)",
     },
   },
 });
@@ -65,7 +70,7 @@ export const dropzone = style({
 export const uploadText = style({
   display: "grid",
   gap: vars.space.sm,
-  color: vars.color.text,
+  color: vars.color.onSurface,
 });
 
 export const primaryText = style({
@@ -73,7 +78,7 @@ export const primaryText = style({
 });
 
 export const secondaryText = style({
-  color: vars.color.textMuted,
+  color: vars.color.onSurfaceVariant,
   fontSize: "14px",
 });
 
@@ -90,15 +95,16 @@ export const input = style({
 });
 
 export const selectedFilePanel = style({
-  minHeight: "220px",
+  // minHeight: "220px",
   display: "grid",
   gap: vars.space.md,
   alignItems: "center",
   padding: vars.space.lg,
-  background: vars.color.primarySoft,
-  border: `1px solid ${vars.color.borderStrong}`,
-  borderRadius: vars.radius.md,
+  background: "rgba(26, 115, 232, 0.10)",
+  border: "1px solid rgba(26, 115, 232, 0.30)",
+  borderRadius: vars.shape.large,
   cursor: "default",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
   "@media": {
     [media.tablet]: {
       gridTemplateColumns: "1fr auto",
@@ -113,14 +119,14 @@ export const fileInfo = style({
 });
 
 export const fileLabel = style({
-  color: vars.color.primary,
+  color: vars.color.onPrimaryContainer,
   fontSize: "13px",
   fontWeight: 800,
 });
 
 export const fileName = style({
   overflow: "hidden",
-  color: vars.color.text,
+  color: vars.color.onSurface,
   fontSize: "16px",
   fontWeight: 700,
   textOverflow: "ellipsis",
@@ -128,24 +134,13 @@ export const fileName = style({
 });
 
 export const fileStatus = style({
-  color: vars.color.textMuted,
+  color: vars.color.onSurfaceVariant,
   fontSize: "14px",
-});
-
-export const clearButton = style({
-  minHeight: "36px",
-  padding: `0 ${vars.space.md}`,
-  background: vars.color.surface,
-  border: `1px solid ${vars.color.borderStrong}`,
-  color: vars.color.primary,
-  borderRadius: vars.radius.sm,
-  cursor: "pointer",
-  fontWeight: 700,
 });
 
 export const errorMessage = style({
   margin: 0,
-  color: "#c2410c",
+  color: vars.color.error,
   fontSize: "14px",
   fontWeight: 700,
 });

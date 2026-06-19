@@ -4,10 +4,10 @@ import { media, vars } from "@/styles/theme.css";
 export const section = style({
   display: "grid",
   padding: vars.space.lg,
-  background: `linear-gradient(135deg, ${vars.color.surface} 0%, ${vars.color.surfaceMuted} 100%)`,
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.lg,
-  boxShadow: vars.shadow.subtle,
+  background: vars.color.surfaceVariant,
+  border: `1px solid ${vars.color.outline}`,
+  borderRadius: vars.shape.large,
+  boxShadow: vars.elevation.level1,
 });
 
 export const list = style({
@@ -25,7 +25,7 @@ export const list = style({
       bottom: "31px",
       left: "23px",
       width: "2px",
-      background: vars.color.border,
+      background: vars.color.outline,
     },
   },
   "@media": {
@@ -77,9 +77,9 @@ export const number = style({
   placeItems: "center",
   background: vars.color.surface,
   color: vars.color.primary,
-  border: `2px solid ${vars.color.borderStrong}`,
+  border: `2px solid ${vars.color.primary}`,
   borderRadius: "50%",
-  boxShadow: `0 0 0 8px ${vars.color.surfaceMuted}`,
+  boxShadow: `0 0 0 8px ${vars.color.surfaceVariant}`,
   fontSize: "15px",
   fontWeight: 800,
 });
@@ -88,8 +88,8 @@ export const content = style({
   minWidth: 0,
   padding: vars.space.md,
   background: "rgba(255, 255, 255, 0.76)",
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.md,
+  border: `1px solid ${vars.color.outline}`,
+  borderRadius: vars.shape.medium,
   "@media": {
     [media.desktop]: {
       width: "100%",
@@ -99,14 +99,14 @@ export const content = style({
 
 export const title = style({
   margin: 0,
-  color: vars.color.text,
+  color: vars.color.onSurface,
   fontSize: "17px",
   lineHeight: 1.35,
 });
 
 export const description = style({
   margin: `${vars.space.sm} 0 0`,
-  color: vars.color.textMuted,
+  color: vars.color.onSurfaceVariant,
   fontSize: "14px",
   lineHeight: 1.65,
   wordBreak: "keep-all",
