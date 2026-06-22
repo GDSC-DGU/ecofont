@@ -2,15 +2,9 @@
 
 import TextField from "@mui/material/TextField";
 import { useConversion } from "@/context/ConversionContext";
-import { useFontFaceLoader } from "@/hooks/useFontFaceLoader";
 
 export function FontComparison() {
-  const { result, previewText, setPreviewText } = useConversion();
-
-  const originalLoaded = useFontFaceLoader(
-    "eco-original",
-    result?.originalFile ?? null
-  );
+  const { previewText, setPreviewText } = useConversion();
 
   return (
     <TextField
@@ -45,7 +39,7 @@ export function FontComparison() {
           "aria-label": "미리보기 텍스트 입력",
           maxLength: 40,
           style: {
-            fontFamily: originalLoaded ? "eco-original, sans-serif" : "inherit",
+            fontFamily: "inherit",
             fontSize: "24px",
             lineHeight: 1.4,
           },
