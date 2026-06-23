@@ -1,96 +1,47 @@
 import { style } from "@vanilla-extract/css";
-import { media, vars } from "@/styles/theme.css";
+import { vars } from "@/styles/theme.css";
 
-export const card = style({
+export const wrapper = style({
   display: "grid",
-  gap: vars.space.lg,
-  padding: vars.space.lg,
-  background: vars.color.surface,
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.lg,
-  boxShadow: vars.shadow.subtle,
-});
-
-export const title = style({
-  margin: 0,
-  fontSize: "20px",
-});
-
-export const grid = style({
-  display: "grid",
-  gap: vars.space.md,
-  "@media": {
-    [media.tablet]: {
-      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-    },
-  },
-});
-
-export const panel = style({
-  minHeight: "260px",
-  display: "grid",
-  alignContent: "space-between",
-  gap: vars.space.lg,
-  padding: vars.space.lg,
-  background: vars.color.surfaceMuted,
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.md,
+  gap: vars.space.sm,
 });
 
 export const label = style({
   margin: 0,
-  color: vars.color.textMuted,
-  fontSize: "14px",
-  fontWeight: 700,
+  fontSize: "12px",
+  fontWeight: 500,
+  color: vars.color.onSurfaceVariant,
+  letterSpacing: "0.04em",
+  textTransform: "uppercase",
 });
 
-export const sample = style({
-  margin: 0,
-  color: vars.color.text,
-  fontSize: "34px",
-  fontWeight: 800,
-  lineHeight: 1.18,
-});
-
-export const optimized = style({
-  color: vars.color.primary,
-});
-
-export const samplePlaceholder = style({
-  margin: 0,
-  color: vars.color.textMuted,
-  fontSize: "34px",
-  fontWeight: 800,
-  lineHeight: 1.18,
-});
-
-export const inputWrapper = style({
-  marginTop: vars.space.md,
-  display: "flex",
-  flexDirection: "column",
-  gap: vars.space.sm,
-});
-
-export const inputLabel = style({
-  margin: 0,
-  color: vars.color.textMuted,
-  fontSize: "13px",
-  fontWeight: 600,
-});
-
+// MD3 Filled Text Field — 입력 필드 자체가 원본 폰트 미리보기
 export const input = style({
   width: "100%",
-  padding: `${vars.space.sm} ${vars.space.md}`,
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.sm,
-  fontSize: "16px",
-  background: vars.color.surface,
-  color: vars.color.text,
+  padding: `${vars.space.md} ${vars.space.lg}`,
+  background: vars.color.surfaceVariant,
+  border: "none",
+  borderBottom: `2px solid ${vars.color.outline}`,
+  borderRadius: `${vars.shape.small} ${vars.shape.small} 0 0`,
+  fontSize: "28px",
+  lineHeight: 1.4,
+  color: vars.color.onSurface,
   outline: "none",
-  boxSizing: "border-box",
+  transition: "border-color 160ms ease",
   selectors: {
+    "&::placeholder": {
+      color: vars.color.onSurfaceVariant,
+    },
     "&:focus": {
-      borderColor: vars.color.primary,
+      borderBottomColor: vars.color.primary,
+      borderBottomWidth: "2px",
     },
   },
+});
+
+export const helper = style({
+  margin: 0,
+  fontSize: "12px",
+  color: vars.color.onSurfaceVariant,
+  paddingLeft: vars.space.xs,
 });

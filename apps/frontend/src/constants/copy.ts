@@ -47,16 +47,18 @@ export const copy = {
     ],
   },
   loading: {
-    title: "폰트에 잉크 다이어트를 적용하는 중입니다",
+    title: "폰트가 잉크 다이어트하는 중입니다",
     description:
       "모든 언어의 글자 형태를 최대한 보존하면서 더 적은 잉크로 인쇄될 수 있는 구조를 찾고 있습니다.",
-    action: "결과 화면 보기",
   },
   result: {
     title: "잉크 다이어트 결과",
     description:
-      "지속 가능한 타이포그래피를 위해 줄어든 잉크 사용량과 원본/변환 미리보기를 확인합니다.",
-    downloadAction: "다이어트 TTF 다운로드",
+      "축하드려요! 🎉 당신의 폰트가 성공적으로 다이어트했어요. \n이제 인쇄할 때마다 지구도 함께 숨 쉽니다. 날씬해진 폰트를 확인해보세요!",
+    downloadAction: "TTF 저장",
+    exportAction: "이미지 저장",
+    exportingAction: "생성 중...",
+    exportError: "이미지 생성에 실패했습니다. 다시 시도해 주세요.",
     metrics: {
       title: "잉크 다이어트 지표",
       inkSavingLabel: "잉크 절약률",
@@ -64,7 +66,7 @@ export const copy = {
       note: "실제 변환이 연결되면 폰트별 잉크 절약률과 환경 지표를 이 영역에 표시합니다.",
     },
     comparison: {
-      title: "원본 및 다이어트 폰트 미리보기",
+      title: "원본 폰트 미리보기",
       sample: "지속 가능한 타이포그래피 EcoFont",
       originalLabel: "원본",
       optimizedLabel: "다이어트 적용",

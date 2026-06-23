@@ -242,3 +242,45 @@
 **Context**: Construction Phase - Unit 1b Build and Test 완료
 
 ---
+
+## Unit 1c Build and Test 완료 — MD3 리디자인 + 에코폰트 그리드 + Export 이미지
+
+**Timestamp**: 2026-06-19T14:00:00Z
+**User Input**: 요구사항(원본 폰트 영역 최소화, 잉크절약률·탄소절감량 Export 화면 꽉차게, MD3 컴포넌트 라이브러리 실제 import 적용) + 가이드 섹션 디자인 개선 + 초록색 제거
+**AI Response**: Unit 1c Construction 전 단계(Functional Design → NFR Requirements → NFR Design → Code Generation Plan → Code Generation → Build & Test) 완료. pnpm tsc --noEmit 에러 없음, pnpm build 성공.
+**Changes**:
+- ConversionContext: EcoFontVariant + ConversionResult(~10개 variants) + previewText 공유
+- FontGrid: Promise.allSettled 병렬 FontFace 로딩 + 3열 그리드
+- FontCard: 카드별 TTF 다운로드 + html2canvas Export (useExportImage)
+- ExportCard: 1200×630 숨겨진 캡처용 카드 (미리보기 텍스트 68px + 메트릭 96px)
+- theme.css.ts + providers.tsx: 초록색(#34A853) → 파란색(#1558B0 / #1A73E8) 전면 교체
+- UploadGuide: MUI Stepper alternativeLabel + Paper 래퍼로 리디자인
+- FontComparison: 입력 최소화 (MUI TextField만)
+- MUI v9(@mui/material@9.1.1) + AppRouterCacheProvider + Roboto(next/font) 설치·적용
+**Context**: Construction Phase - Unit 1c Build and Test 완료, 커밋 대기
+
+---
+
+## Unit 1c 확장 — 글로시모피즘 UI 리디자인 + 결과 페이지 리스트 뷰 전환
+
+**Timestamp**: 2026-06-20T00:00:00Z
+**User Input**: 아이폰 감성 유리 느낌 디자인 / 로고 Google·Apple 스타일 / 로딩 오버레이 전체화면 / 결과 페이지를 그리드가 아닌 세로 flex 리스트로 / 잉크·탄소 요약 상단 표시 / 미리보기 텍스트박스 pill 형태 / 배경 구글 클린 / favicon / ExportCard 로고 아이콘 / 머티어리얼 아이콘 적용 / 글자 길이 제한 + 줄바꿈 / ExportCard 이미지 가로 초과 수정 / 미사용 코드 삭제 + 정합성 정리
+**AI Response**: 다수 UI 개선 요청을 순차 적용.
+**Changes**:
+- `global.css.ts` + `theme.css.ts` + `providers.tsx`: 글로시모피즘 테마 (backdrop-filter blur, rgba 반투명, 중립 그레이 보더, #F8FAFF 배경)
+- `LoadingOverlay`: `createPortal(…, document.body)` 적용 — backdrop-filter 부모의 stacking context 문제 해결
+- `Logo` 컴포넌트 신규 (SVG 아이콘 + eco·font 워드마크, Google/Apple 스타일)
+- `apps/frontend/src/app/icon.svg` 신규 → Next.js 자동 favicon 적용
+- 결과 페이지: `FontGrid`/`FontCard` 3열 그리드 → `FontList`/`FontListItem` 세로 리스트 전환 (Lotte 폰트 페이지 레퍼런스)
+- `ResultSummary` 신규 — 평균 잉크절약률·탄소절감량 한줄 요약 카드
+- `FontListItem`: previewWrap(flex:1) | metrics(중앙) | actions(우측) 레이아웃; TTF·이미지 버튼 Material 아이콘(@mui/icons-material) 적용
+- `FontComparison`: pill 형태(border-radius 9999px), 플레이스홀더 전용(label 제거), 회색 기본 보더 → 파란색 포커스 보더, maxLength 40
+- `ExportCard`: 로고 SVG 아이콘 헤더 추가; previewText WebkitLineClamp 2줄; 이미지 가로 초과 방지(hero/headlineRow overflow:hidden + minWidth:0 + width:100%)
+- `useExportImage`: html2canvas에 `width: el.offsetWidth, height: el.offsetHeight` 명시 — scrollWidth 기반 가로 확장 방지
+- `convertFont.ts` mock: `download_url: string` → `ttf_blob: Blob` (TTF 직접 수신 구조 시뮬레이션, TODO 주석)
+- `useConvertFont.ts`: fetch(url) 제거 → `v.ttf_blob` 직접 사용 + `URL.createObjectURL(blob)` 생성
+- Dead code 삭제: `FontGrid`, `FontCard`, `ResultMetrics`, `DownloadResult` 컴포넌트 및 index.ts export 제거
+- `aidlc-state.md` Workspace Root 경로 수정(`/Users/toni` → `/Users/jungsun`), Unit 1c 설명 현실화
+**Context**: Construction Phase - Unit 1c 확장 완료, 커밋 대기
+
+---

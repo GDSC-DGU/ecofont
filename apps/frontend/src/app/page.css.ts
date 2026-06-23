@@ -36,6 +36,7 @@ export const eyebrow = style({
 export const title = style({
   maxWidth: "760px",
   margin: 0,
+  color: vars.color.onSurface,
   fontSize: "36px",
   lineHeight: 1.12,
   wordBreak: "keep-all",
@@ -49,7 +50,7 @@ export const title = style({
 export const description = style({
   maxWidth: "680px",
   margin: 0,
-  color: vars.color.textMuted,
+  color: vars.color.onSurfaceVariant,
   fontSize: "16px",
   lineHeight: 1.7,
   wordBreak: "keep-all",
