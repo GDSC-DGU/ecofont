@@ -42,6 +42,10 @@ resource "google_cloud_run_v2_service" "backend" {
         name  = "MAX_FILE_SIZE_BYTES"
         value = "10485760"
       }
+      env {
+        name  = "CORS_ALLOW_ORIGINS"
+        value = var.cors_allow_origins
+      }
 
       ports {
         container_port = 8080

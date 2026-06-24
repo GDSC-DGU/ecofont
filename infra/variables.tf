@@ -14,3 +14,9 @@ variable "backend_image" {
   type        = string
   # 예: "asia-northeast3-docker.pkg.dev/<project_id>/ecofont/backend:0.1.0"
 }
+
+variable "cors_allow_origins" {
+  description = "CORS 허용 출처 (콤마 구분). 프론트 배포 도메인."
+  type        = string
+  default     = "http://localhost:3000,https://ecofont.vercel.app"
+}
