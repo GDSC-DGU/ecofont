@@ -6,7 +6,7 @@ resource "google_cloud_run_v2_service" "backend" {
 
   template {
     service_account                  = google_service_account.backend.email
-    timeout                          = "600s"
+    timeout                          = "1200s" # 20분 — SSIM 최적화(Unit 3) 여유
     max_instance_request_concurrency = 1
 
     scaling {
@@ -20,7 +20,7 @@ resource "google_cloud_run_v2_service" "backend" {
       resources {
         limits = {
           cpu    = "2"
-          memory = "2Gi"
+          memory = "4Gi" # SSIM 최적화 OOM 방어 (메모리 상향 비용은 미미)
         }
         cpu_idle          = false
         startup_cpu_boost = false
