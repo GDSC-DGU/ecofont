@@ -3,23 +3,12 @@ resource "google_service_account" "backend" {
   display_name = "Eco-Font Backend Service Account"
 }
 
-# input 버킷: Cloud Run이 객체 생성 (업로드)
-resource "google_storage_bucket_iam_member" "backend_input" {
-  bucket = google_storage_bucket.input.name
+# assets 버킷: Cloud Run이 결과물 쓰기(put) + 다운로드 서빙용 읽기(get)
+resource "google_storage_bucket_iam_member" "backend_assets" {
+  bucket = google_storage_bucket.assets.name
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.backend.email}"
 }
 
-# output 버킷: Cloud Run이 객체 생성 + Signed URL 발급
-resource "google_storage_bucket_iam_member" "backend_output" {
-  bucket = google_storage_bucket.output.name
-  role   = "roles/storage.objectAdmin"
-  member = "serviceAccount:${google_service_account.backend.email}"
-}
-
-# Cloud Run SA가 자기 자신을 impersonate 가능하게 — Signed URL을 키 파일 없이 발급
-resource "google_service_account_iam_member" "backend_self_signer" {
-  service_account_id = google_service_account.backend.name
-  role               = "roles/iam.serviceAccountTokenCreator"
-  member             = "serviceAccount:${google_service_account.backend.email}"
-}
+# (Signed URL 폐기 → self-impersonation serviceAccountTokenCreator 권한 제거됨.
+#  결과물 다운로드는 Cloud Run 프록시 서빙이라 토큰 발급이 필요 없다.)

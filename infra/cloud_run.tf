@@ -27,20 +27,12 @@ resource "google_cloud_run_v2_service" "backend" {
       }
 
       env {
-        name  = "GCS_INPUT_BUCKET"
-        value = google_storage_bucket.input.name
-      }
-      env {
-        name  = "GCS_OUTPUT_BUCKET"
-        value = google_storage_bucket.output.name
-      }
-      env {
-        name  = "SIGNED_URL_TTL_SECONDS"
-        value = "86400"
+        name  = "GCS_ASSET_BUCKET"
+        value = google_storage_bucket.assets.name
       }
       env {
         name  = "MAX_FILE_SIZE_BYTES"
-        value = "10485760"
+        value = "52428800" # 50MB
       }
       env {
         name  = "CORS_ALLOW_ORIGINS"
@@ -74,8 +66,7 @@ resource "google_cloud_run_v2_service" "backend" {
 
   depends_on = [
     google_artifact_registry_repository.ecofont,
-    google_storage_bucket_iam_member.backend_input,
-    google_storage_bucket_iam_member.backend_output,
+    google_storage_bucket_iam_member.backend_assets,
   ]
 
   # 이미지 배포는 CI(GitHub Actions의 gcloud run deploy)가 담당 → Terraform이
