@@ -20,3 +20,9 @@ variable "cors_allow_origins" {
   type        = string
   default     = "http://localhost:3000,https://ecofont.vercel.app"
 }
+
+variable "github_repository" {
+  description = "CI/CD WIF 허용 대상 GitHub 저장소 (owner/repo)"
+  type        = string
+  default     = "GDSC-DGU/ecofont"
+}

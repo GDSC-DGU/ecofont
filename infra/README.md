@@ -94,10 +94,16 @@ terraform apply -var-file=terraform.tfvars
 
 ---
 
+## CI/CD (Open-3, 구현됨)
+
+- **Frontend** = Vercel 자동 배포 (별도 설정 없음)
+- **Backend** = GitHub Actions → Cloud Run (`.github/workflows/backend-deploy.yml`)
+  - 트리거: `develop`에 `apps/backend/**`·`infra/cloud_run.tf`·워크플로 변경 push (+ 수동 `workflow_dispatch`)
+  - 흐름: WIF 인증 → `docker build`(linux/amd64) → Artifact Registry push(태그=git SHA) → `gcloud run deploy`
+  - **인증**: Workload Identity Federation (키리스, `cicd.tf`). 장기 비밀키 없음.
+  - **Terraform 분리**: `cloud_run.tf`가 `image`를 `ignore_changes` → 인프라는 Terraform, 이미지 배포는 CI 담당 (드리프트 방지)
+  - **GitHub repo 변수** (비밀 아님, `terraform output`으로 확인): `GCP_WIF_PROVIDER`=`github_wif_provider`, `GCP_DEPLOYER_SA`=`github_deployer_sa`
+
 ## Open Items / 후속 의제
 
-- **Open-3 (확장)**: CI/CD 파이프라인
-  - Frontend = Vercel (PR 머지 시 자동 배포)
-  - Backend = GCP — GitHub Actions에서 `docker build` → Artifact Registry push → Cloud Run 새 revision
-  - Trigger/branch/secrets 설계 별도. MVP 코어 완료 후 진행.
-- **Artifact Registry cleanup 정책**: `google_artifact_registry_repository_cleanup_policy`로 keep-last-N + age-based 삭제. idle 누적 비용 방지.
+- **Artifact Registry cleanup 정책**: `google_artifact_registry_repository_cleanup_policy`로 keep-last-N + age-based 삭제. CI가 SHA 태그로 매 배포마다 이미지를 쌓으므로 누적 방지 필요.
