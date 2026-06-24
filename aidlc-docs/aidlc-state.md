@@ -4,8 +4,8 @@
 
 - **Project Type**: Brownfield
 - **Start Date**: 2026-05-12T00:00:00Z
-- **Last Updated**: 2026-06-07T16:00:00Z
-- **Current Stage**: CONSTRUCTION / Unit 2 Code Generation (커밋 직전)
+- **Last Updated**: 2026-06-24T10:30:00Z
+- **Current Stage**: CONSTRUCTION / Unit 2·4 배포 완료 (Cloud Run 라이브)
 
 ## Workspace State
 
@@ -49,8 +49,9 @@
 - [x] NFR Requirements — Unit 2 22개 NFR-U2-\* 항목 승인 완료 (PR #8 merged)
 - [x] NFR Design — Unit 2 9개 결정 승인 완료 (PR #9 merged)
 - [x] Infrastructure Design — Unit 2 9개 INFRA-\* 결정 승인 완료 (PR #9 merged)
-- [x] Code Generation — Unit 1a (완료), Unit 1b (완료), Unit 2 apps/backend + infra 코드 생성 완료, 승인 대기
-- [x] Build and Test — Unit 1a (완료), Unit 1b (완료) / Unit 2 미실행
+- [x] Code Generation — Unit 1a (완료), Unit 1b (완료), Unit 2 apps/backend + infra 코드 생성 완료
+- [x] Build and Test — Unit 1a (완료), Unit 1b (완료), Unit 2 (완료: uv.lock 생성·docker build/push·Cloud Run /health 200)
+- [x] Unit 4 Infrastructure — GCP ecofont-re 프로비저닝 + terraform apply(8 리소스) + Cloud Run 배포 완료 (2026-06-24)
 
 ### OPERATIONS PHASE
 
@@ -59,9 +60,10 @@
 ## Current Status
 
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 1b (Frontend API 연동 Mock) — Build and Test 완료
-- **Next Stage**: Unit 2 Build and Test (로컬 `uv sync` / docker build / 가동) 또는 Unit 3 시작 (우제) → 완료 후 Unit 1b 실 API 연결
-- **Status**: 커밋·푸시·PR 직전
+- **Current Stage**: Unit 2·4 배포 완료 — Backend Cloud Run 라이브
+- **배포 정보**: GCP 프로젝트 `ecofont-re` (asia-northeast3) · Backend URL `https://ecofont-backend-pdixgz2hlq-du.a.run.app` · 이미지 `backend:0.1.0` (identity placeholder AI)
+- **Next Stage**: Unit 3 시작 (우제, AI 실구현) → backend 머지 후 이미지 재빌드/재배포 → Unit 1b 실 API 연결 (Vercel `NEXT_PUBLIC_BACKEND_URL` = 위 URL, 이소은 직접)
+- **Status**: SSOT 갱신 + uv.lock/gitignore 커밋 진행 중
 - **생성 산출물 (40 파일)**:
   - `apps/backend/` 30 파일 (Python 25 + pyproject.toml + Dockerfile + .dockerignore + .env.example + README)
   - `apps/ai-engine/README.md` (우제 onboarding)

@@ -242,3 +242,12 @@
 **Context**: Construction Phase - Unit 1b Build and Test 완료
 
 ---
+## Unit 2·4 — GCP 프로비저닝 + Cloud Run 배포 완료
+
+**Timestamp**: 2026-06-24T10:30:00Z
+**User Input**: "인프라 구성 작업 마저 진행해야해" / "1번 진행 방법 알려줘. 무료 gcp 체험 가능하도록" / "SSOT 갱신 + 커밋 모두"
+**AI Response**: GCP 프로젝트 ecofont-re에 OPEN 빌링 계정(01E641-C49DD5-AD3FCD) 연결, API 7종 활성화, terraform 상태버킷 생성, ADC 계정을 팀 계정(dgu.ecofont)으로 정렬. apps/backend/uv.lock 신규 생성(Dockerfile uv sync --frozen 요구). Artifact Registry repo → 이미지(backend:0.1.0, linux/amd64) build/push → terraform apply(8 리소스). Backend URL https://ecofont-backend-pdixgz2hlq-du.a.run.app /health 200 검증. 배포 이미지는 identity placeholder AI(Unit 3 미머지). status.html·aidlc-state.md SSOT 갱신.
+**Context**: Construction Phase - Unit 2 Build & Test + Unit 4 Infrastructure 완료
+**Note**: 사용자 메모 — ai-engine 디렉토리 미사용, AI는 backend 하위로 구현 예정(아직 origin 미머지). 머지 시 설계 문서/CLAUDE.md의 apps/ai-engine 전제를 backend 하위로 동기화 필요(rule 5.3).
+
+---
