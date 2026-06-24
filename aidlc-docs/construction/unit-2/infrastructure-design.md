@@ -95,11 +95,12 @@ resource "google_artifact_registry_repository" "ecofont" {
 
 ```hcl
 # cloud_run.tf
+# NOTE: deletion_protection 인자는 google provider 6.x+ 전용 → ~> 5.0 핀에서는 미지원.
+#       provider 5.x 에는 Cloud Run v2 삭제 보호 개념이 없어 인자 자체를 생략한다.
 resource "google_cloud_run_v2_service" "backend" {
-  name                = "ecofont-backend"
-  location            = var.region
-  ingress             = "INGRESS_TRAFFIC_ALL"
-  deletion_protection = false
+  name     = "ecofont-backend"
+  location = var.region
+  ingress  = "INGRESS_TRAFFIC_ALL"
 
   template {
     service_account = google_service_account.backend.email

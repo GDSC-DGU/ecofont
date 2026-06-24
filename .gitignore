@@ -23,3 +23,6 @@ infra/.terraform.lock.hcl
 .pnpm-store/
 .idea/
 .vscode/
+
+# Terraform local vars (use .example as template)
+infra/terraform.tfvars
