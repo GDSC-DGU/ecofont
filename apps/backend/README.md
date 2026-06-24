@@ -4,7 +4,7 @@
 
 > **현재 상태**: 우제 Cherokee 생성 API가 기존 비동기 오케스트레이터를 통째 대체하는 전환 중.
 > 이 디렉토리는 **운영 골격**(CORS·로깅·`/health` + GCS 배선)만 있고, 변환 로직(라우터·AI 모듈)은 우제 코드 이식 대기.
-> **이식 가이드: [`apps/ai-engine/README.md`](../ai-engine/README.md)** (계약·GCS 배선·운영배선·체크리스트)
+> **이식 가이드: [`INTEGRATION.md`](INTEGRATION.md)** (계약·GCS 배선·운영배선·체크리스트)
 
 ## 구조 (현재 골격)
 
@@ -25,7 +25,7 @@ app/
 - `GET /v1/assets/{job_id}/{path}` → 결과물 다운로드 (GCS 프록시 서빙, 상대경로)
 - `GET /health` → `{ "status": "ok" }` (현재 구현됨, Cloud Run probe)
 
-계약 전문: [`apps/ai-engine/README.md`](../ai-engine/README.md) §7.
+계약 전문: [`INTEGRATION.md`](INTEGRATION.md) §7.
 
 ## 로컬 실행
 
@@ -48,7 +48,7 @@ uv run uvicorn app.main:app --reload --port 8080
 - 결과물 저장을 `gcs_assets.put_asset`(GCS)로 + `/v1/assets` 라우트 추가
 - 운영 배선(CORS·50MB·`/health`·로깅) 유지 + 8080 listen
 
-상세·체크리스트: [`apps/ai-engine/README.md`](../ai-engine/README.md) §2~6.
+상세·체크리스트: [`INTEGRATION.md`](INTEGRATION.md) §2~6.
 
 ## 품질 도구
 

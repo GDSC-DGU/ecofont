@@ -189,7 +189,7 @@
               <td><strong>Unit 1b</strong><br/>Frontend API 연동</td>
               <td>이정선 / 류동현</td>
               <td><span class="pill pill-pending">재작업 필요 (폴링 폐기)</span></td>
-              <td>기존 비동기 폴링 mock은 폐기 대상. 우제 API가 동기 단일 응답으로 전환됨 → <code>POST /v1/font-generation/ttf</code> 1회 호출 + 응답 <code>candidates[20]</code>을 FontList에 매핑하는 구조로 교체 필요. 계약: <a href="apps/ai-engine/README.md">apps/ai-engine/README.md §7</a></td>
+              <td>기존 비동기 폴링 mock은 폐기 대상. 우제 API가 동기 단일 응답으로 전환됨 → <code>POST /v1/font-generation/ttf</code> 1회 호출 + 응답 <code>candidates[20]</code>을 FontList에 매핑하는 구조로 교체 필요. 계약: <a href="apps/backend/INTEGRATION.md">apps/backend/INTEGRATION.md §7</a></td>
             </tr>
             <tr>
               <td><strong>Unit 1c</strong><br/>글로시모피즘 UI + 리스트 뷰</td>
@@ -207,7 +207,7 @@
               <td><strong>Unit 3</strong><br/>AI Engine</td>
               <td>이우제 / 류동현</td>
               <td><span class="pill pill-progress">제작 완료 · 이식 대기</span></td>
-              <td>우제가 Cherokee 생성 API + AI 모듈 제작 완료(별도 FastAPI). backend 통째 대체 방향 → <code>apps/backend</code> 하위로 이식 예정. 이식 가이드: <a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a> §2~6</td>
+              <td>우제가 Cherokee 생성 API + AI 모듈 제작 완료(별도 FastAPI). backend 통째 대체 방향 → <code>apps/backend</code> 하위로 이식 예정. 이식 가이드: <a href="apps/backend/INTEGRATION.md"><code>apps/backend/INTEGRATION.md</code></a> §2~6</td>
             </tr>
             <tr>
               <td><strong>Unit 4</strong><br/>Infrastructure</td>
@@ -243,14 +243,14 @@
             <li>Unit 1c 커밋 → PR 올리기 (<code>pnpm build</code> 통과 확인됨)</li>
             <li><strong>폴링 mock 폐기 → 동기 단일 POST 전환</strong>: <code>POST /v1/font-generation/ttf</code> 1회, 응답 <code>candidates[20]</code>을 FontList에 매핑</li>
             <li>다운로드: 응답 <code>*_url</code>(상대경로)에 API_BASE 붙여 fetch</li>
-            <li>실 API 계약 참조: <a href="apps/ai-engine/README.md">apps/ai-engine/README.md §7</a></li>
+            <li>실 API 계약 참조: <a href="apps/backend/INTEGRATION.md">apps/backend/INTEGRATION.md §7</a></li>
           </ul>
         </div>
         <div class="card">
           <h3>이우제 (AI 총괄)</h3>
           <ul class="tight">
             <li>✅ Cherokee 생성 API + AI 모듈 제작 완료 (별도 FastAPI)</li>
-            <li>이식: <a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a> §2~6 — 코드를 <code>apps/backend</code> 하위(<code>app/</code>)에 배치</li>
+            <li>이식: <a href="apps/backend/INTEGRATION.md"><code>apps/backend/INTEGRATION.md</code></a> §2~6 — 코드를 <code>apps/backend</code> 하위(<code>app/</code>)에 배치</li>
             <li>결과물 저장을 로컬→<code>gcs_assets.put_asset</code>(GCS)로 교체 + <code>/v1/assets/{job_id}/{path}</code> 라우트 추가</li>
             <li>운영 배선(CORS·50MB·<code>/health</code>·로깅) 이식 + <code>pyproject</code>/<code>Dockerfile</code> 의존성(OCR <code>chr</code> 언어팩 등)</li>
           </ul>
@@ -378,7 +378,7 @@
         <table>
           <tbody>
             <tr><td><a href="apps/backend/README.md"><code>apps/backend/README.md</code></a></td><td>Backend 로컬 실행·컨테이너 빌드·아키텍처 요약</td></tr>
-            <tr><td><a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a></td><td>우제·동현 Unit 3 시작 가이드</td></tr>
+            <tr><td><a href="apps/backend/INTEGRATION.md"><code>apps/backend/INTEGRATION.md</code></a></td><td>우제 Cherokee API 이식 가이드 (계약·GCS·운영배선·체크리스트)</td></tr>
             <tr><td><a href="infra/README.md"><code>infra/README.md</code></a></td><td>Terraform 배포 절차, idle 비용, NFR 매핑</td></tr>
             <tr><td><a href="CLAUDE.md"><code>CLAUDE.md</code></a></td><td>AI(Claude Code)용 프로젝트 가이드 — AI 협업 시 진입점</td></tr>
           </tbody>
