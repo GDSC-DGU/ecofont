@@ -1,40 +1,50 @@
-import { copy } from "@/constants/copy";
-import * as styles from "./FontComparison.css";
+"use client";
+
+import TextField from "@mui/material/TextField";
+import { useConversion } from "@/context/ConversionContext";
 
 export function FontComparison() {
-  return (
-    <section className={styles.card}>
-      <h2 className={styles.title}>{copy.result.comparison.title}</h2>
-      <div className={styles.grid}>
-        <PreviewPanel
-          label={copy.result.comparison.originalLabel}
-          text={copy.result.comparison.sample}
-        />
-        <PreviewPanel
-          label={copy.result.comparison.optimizedLabel}
-          text={copy.result.comparison.sample}
-          optimized
-        />
-      </div>
-    </section>
-  );
-}
+  const { previewText, setPreviewText } = useConversion();
 
-function PreviewPanel({
-  label,
-  text,
-  optimized = false,
-}: {
-  label: string;
-  text: string;
-  optimized?: boolean;
-}) {
   return (
-    <div className={styles.panel}>
-      <p className={styles.label}>{label}</p>
-      <p className={`${styles.sample} ${optimized ? styles.optimized : ""}`}>
-        {text}
-      </p>
-    </div>
+    <TextField
+      fullWidth
+      variant="filled"
+      placeholder="미리보기 텍스트를 입력하세요"
+      value={previewText}
+      onChange={(e) => setPreviewText(e.target.value)}
+      sx={{
+        "& .MuiFilledInput-root": {
+          borderRadius: "9999px",
+          paddingLeft: "24px",
+          paddingRight: "24px",
+          paddingTop: "0px",
+          paddingBottom: "0px",
+          outline: "1.5px solid rgba(218, 225, 240, 0.90)",
+          transition: "outline-color 160ms ease",
+        },
+        "& .MuiFilledInput-root.Mui-focused": {
+          outline: "2px solid #1A73E8",
+        },
+        "& .MuiFilledInput-root::before": { display: "none" },
+        "& .MuiFilledInput-root::after": { display: "none" },
+        "& .MuiInputBase-input": {
+          paddingTop: "16px",
+          paddingBottom: "16px",
+        },
+      }}
+      slotProps={{
+        htmlInput: {
+          "data-testid": "font-comparison-input",
+          "aria-label": "미리보기 텍스트 입력",
+          maxLength: 40,
+          style: {
+            fontFamily: "inherit",
+            fontSize: "24px",
+            lineHeight: 1.4,
+          },
+        },
+      }}
+    />
   );
 }

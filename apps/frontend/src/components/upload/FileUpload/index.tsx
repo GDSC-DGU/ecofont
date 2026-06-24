@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@mui/material/Button";
 import { StartConversionButton } from "@/components/upload/StartConversionButton";
 import { copy } from "@/constants/copy";
 import { useTtfFileUpload } from "@/hooks/useTtfFileUpload";
@@ -22,7 +23,7 @@ export function FileUpload() {
           <h2 className={styles.title}>{copy.upload.title}</h2>
           <p className={styles.description}>{copy.upload.description}</p>
         </div>
-        <span className={styles.badge}>{copy.upload.badge}</span>
+
       </div>
 
       {selectedFile ? (
@@ -36,13 +37,14 @@ export function FileUpload() {
               {copy.upload.selectedFileReady}
             </span>
           </div>
-          <button
-            className={styles.clearButton}
-            type="button"
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
             onClick={clearSelectedFile}
           >
             {copy.upload.removeFileAction}
-          </button>
+          </Button>
         </div>
       ) : (
         <label
@@ -74,7 +76,7 @@ export function FileUpload() {
         </p>
       ) : null}
 
-      <StartConversionButton disabled={!selectedFile} />
+      <StartConversionButton file={selectedFile} />
     </section>
   );
 }

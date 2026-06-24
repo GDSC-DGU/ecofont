@@ -1,7 +1,7 @@
 # Python
 apps/backend/.venv/
-apps/backend/__pycache__/
-apps/backend/*.pyc
+__pycache__/
+*.pyc
 apps/backend/.env
 
 # Node
@@ -21,3 +21,8 @@ infra/.terraform.lock.hcl
 .DS_Store
 .history
 .pnpm-store/
+.idea/
+.vscode/
+
+# Terraform local vars (use .example as template)
+infra/terraform.tfvars

@@ -100,26 +100,7 @@ cd ecofont
 pnpm install
 ```
 
-**루트 `package.json`:**
-
-```json
-{
-  "name": "ecofont",
-  "private": true,
-  "scripts": {
-    "dev:frontend": "pnpm --filter frontend dev",
-    "build:frontend": "pnpm --filter frontend build",
-    "lint:frontend": "pnpm --filter frontend lint"
-  }
-}
-```
-
-**`pnpm-workspace.yaml`:**
-
-```yaml
-packages:
-  - 'apps/frontend'
-```
+루트 `package.json`, `pnpm-workspace.yaml`은 이미 워크스페이스에 존재. 신규 패키지 추가 시 `pnpm-workspace.yaml`의 `packages` 배열만 수정.
 
 ---
 
@@ -277,27 +258,7 @@ Vercel 대시보드에서 환경변수 설정:
 
 ## `.gitignore`
 
-```gitignore
-# Python
-apps/backend/.venv/
-apps/backend/__pycache__/
-apps/backend/*.pyc
-apps/backend/.env
-
-# Node
-apps/frontend/.next/
-apps/frontend/node_modules/
-apps/frontend/.env.local
-
-# Terraform
-infra/.terraform/
-infra/*.tfstate
-infra/*.tfstate.backup
-infra/.terraform.lock.hcl
-
-# 공통
-.DS_Store
-```
+루트 `.gitignore` 참조. Python(.venv, __pycache__, .env), Node(.next, node_modules, .env.local), Terraform(.terraform, *.tfstate) 패턴 포함.
 
 ---
 
