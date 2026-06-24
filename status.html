@@ -158,7 +158,7 @@
         </div>
         <div class="progress-bar" aria-label="AI-DLC 진행 막대">
           <div class="ps-inception">Inception ✓</div>
-          <div class="ps-construction">Construction 중 (Unit 1a·1b·1c 완료 / Unit 2·4 배포 완료 · CI/CD 자동배포)</div>
+          <div class="ps-construction">Construction 중 (Unit 1a·1c 완료 / Unit 2·4 배포 / 우제 Cherokee API로 전환·이식 준비 중)</div>
           <div class="ps-operations">Operations</div>
         </div>
         <div style="margin-top: 14px; font-size: 14px; color: var(--text-muted)">
@@ -188,8 +188,8 @@
             <tr>
               <td><strong>Unit 1b</strong><br/>Frontend API 연동</td>
               <td>이정선 / 류동현</td>
-              <td><span class="pill pill-done">완료 (mock 폴링)</span></td>
-              <td>비동기 폴링 시뮬레이션 구현 완료 (POST /convert → GET /jobs 폴링 → <code>ttf_blob</code> 직접 수신). Unit 2 배포 후 <code>src/mocks/convertFont.ts</code> → 실 API 교체만 남음. 산출물: <a href="aidlc-docs/construction/plans/unit-1b-code-generation-plan.md">unit-1b-code-generation-plan.md</a></td>
+              <td><span class="pill pill-pending">재작업 필요 (폴링 폐기)</span></td>
+              <td>기존 비동기 폴링 mock은 폐기 대상. 우제 API가 동기 단일 응답으로 전환됨 → <code>POST /v1/font-generation/ttf</code> 1회 호출 + 응답 <code>candidates[20]</code>을 FontList에 매핑하는 구조로 교체 필요. 계약: <a href="apps/ai-engine/README.md">apps/ai-engine/README.md §7</a></td>
             </tr>
             <tr>
               <td><strong>Unit 1c</strong><br/>글로시모피즘 UI + 리스트 뷰</td>
@@ -200,20 +200,20 @@
             <tr>
               <td><strong>Unit 2</strong><br/>Backend</td>
               <td>이소은</td>
-              <td><span class="pill pill-done">배포 완료 + CI 자동배포 (placeholder AI)</span></td>
-              <td>PR #8·#9·#10 머지. CORS 추가(#20). Cloud Run 라이브, <strong>develop push 시 CI 자동배포</strong>(이미지=git SHA). Swagger 문서 <a href="https://ecofont-backend-pdixgz2hlq-du.a.run.app/docs"><code>/docs</code></a>(#22). 현재 AI는 identity placeholder(Unit 3 미머지)</td>
+              <td><span class="pill pill-progress">Cherokee API로 전환 중 (PR #26)</span></td>
+              <td>기존 비동기 오케스트레이터는 우제 Cherokee API가 통째 대체. <strong>PR #26</strong>에서 폴링·job_store·ai_engine stub·domain/ports 제거 → 운영 배선(CORS·로깅·<code>/health</code>)만 남긴 골격 + <code>gcs_assets</code> 모듈 추가. 우제 코드 이식 대기. (배포된 0.2.0은 우제 코드 통합 시 교체)</td>
             </tr>
             <tr>
               <td><strong>Unit 3</strong><br/>AI Engine</td>
               <td>이우제 / 류동현</td>
-              <td><span class="pill pill-pending">시작 대기</span></td>
-              <td>시작 가이드: <a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a>. Backend 통합 지점은 identity placeholder로 준비됨</td>
+              <td><span class="pill pill-progress">제작 완료 · 이식 대기</span></td>
+              <td>우제가 Cherokee 생성 API + AI 모듈 제작 완료(별도 FastAPI). backend 통째 대체 방향 → <code>apps/backend</code> 하위로 이식 예정. 이식 가이드: <a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a> §2~6</td>
             </tr>
             <tr>
               <td><strong>Unit 4</strong><br/>Infrastructure</td>
               <td>이소은</td>
               <td><span class="pill pill-done">완료</span></td>
-              <td>GCP <code>ecofont-re</code> 빌링 연결 + API 활성화 + 상태버킷 + <code>terraform apply</code> 완료. Cloud Run 라이브. CI/CD(WIF 키리스, #21) + Artifact Registry cleanup 정책(keep-5/30d) 완료.</td>
+              <td>GCP <code>ecofont-re</code> 프로비저닝 + <code>terraform apply</code> + Cloud Run 라이브 + CI/CD(WIF 키리스, #21) + AR cleanup 완료. <strong>PR #27</strong>: Cherokee 동기 API에 맞춰 GCS 정리(input/output→assets 단일 버킷, Signed URL/self-signer 제거, 50MB). CPU/메모리/timeout 사이징만 우제 부하 실측 후 조정 예정.</td>
             </tr>
           </tbody>
         </table>
@@ -228,11 +228,10 @@
         <div class="card">
           <h3>이소은 (Backend + Infra)</h3>
           <ul class="tight">
-            <li>✅ Unit 2 배포 + CORS(#20) + CI/CD 자동배포(#21) + Swagger(#22) 완료</li>
-            <li>✅ Unit 4 인프라 완료 — 프로비저닝 + Artifact Registry cleanup 정책</li>
-            <li>Unit 3(우제) 머지 시 CI가 자동 재배포 → 설계/CLAUDE.md의 <code>apps/ai-engine</code> 전제를 backend 하위로 동기화 (rule 5.3)</li>
-            <li><strong>variants 계약 결정</strong> 팀 전달 (프론트 다중 vs 백엔드 단일) — 실 API 연결 선행</li>
-            <li><strong>Open-1·Open-2 협의</strong>: 우제와 잉크 절약률 산출법, CO2 계수 결정</li>
+            <li>✅ Unit 2·4 배포 + CI/CD + <strong>Cherokee 이식 준비</strong>(PR #26 backend 골격 · PR #27 infra 정리) 완료</li>
+            <li>✅ variants 계약 해소 — 우제 <code>candidates[20]</code> ↔ 프론트 FontList</li>
+            <li>우제 코드 통합 시: 라우터+<code>gcs_assets</code> 연결 확인, <code>pyproject.toml</code>/<code>Dockerfile</code> 의존성, CPU/메모리/timeout 사이징(부하 실측 후)</li>
+            <li>설계 동기화 (rule 5.3/5.7): unit-2 functional-design, vision/CLAUDE.md MVP→Cherokee</li>
           </ul>
         </div>
         <div class="card">
@@ -242,26 +241,26 @@
             <li>✅ Unit 1b 완료 — 폴링 시뮬레이션 + ttf_blob 직접 수신 + 실제 지표 표시</li>
             <li>✅ Unit 1c 완료 — 글로시모피즘 테마, 리스트 뷰(FontList/FontListItem), ExportCard, Logo, ResultSummary, @mui/icons-material</li>
             <li>Unit 1c 커밋 → PR 올리기 (<code>pnpm build</code> 통과 확인됨)</li>
-            <li>Unit 2 Backend 배포 후: <code>src/mocks/convertFont.ts</code> → 실 API 호출로 교체 (import 1줄 + fetch 구현)</li>
-            <li>실 API 계약 참조: <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3</a></li>
+            <li><strong>폴링 mock 폐기 → 동기 단일 POST 전환</strong>: <code>POST /v1/font-generation/ttf</code> 1회, 응답 <code>candidates[20]</code>을 FontList에 매핑</li>
+            <li>다운로드: 응답 <code>*_url</code>(상대경로)에 API_BASE 붙여 fetch</li>
+            <li>실 API 계약 참조: <a href="apps/ai-engine/README.md">apps/ai-engine/README.md §7</a></li>
           </ul>
         </div>
         <div class="card">
           <h3>이우제 (AI 총괄)</h3>
           <ul class="tight">
-            <li><a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a> 정독 → SSIM 최적화 프로토타입 시작</li>
-            <li>인터페이스 계약 (변경 금지): <code>optimize_glyphs(GlyphData) → GlyphData</code></li>
-            <li>소은과 Open-1 (잉크 절약률 산출법) 협의</li>
-            <li>Week 2 SSIM 손실 함수 구현 진입</li>
+            <li>✅ Cherokee 생성 API + AI 모듈 제작 완료 (별도 FastAPI)</li>
+            <li>이식: <a href="apps/ai-engine/README.md"><code>apps/ai-engine/README.md</code></a> §2~6 — 코드를 <code>apps/backend</code> 하위(<code>app/</code>)에 배치</li>
+            <li>결과물 저장을 로컬→<code>gcs_assets.put_asset</code>(GCS)로 교체 + <code>/v1/assets/{job_id}/{path}</code> 라우트 추가</li>
+            <li>운영 배선(CORS·50MB·<code>/health</code>·로깅) 이식 + <code>pyproject</code>/<code>Dockerfile</code> 의존성(OCR <code>chr</code> 언어팩 등)</li>
           </ul>
         </div>
         <div class="card">
           <h3>류동현 (Frontend 지원 + OCR)</h3>
           <ul class="tight">
             <li>✅ Vercel 환경변수 <code>NEXT_PUBLIC_BACKEND_URL</code> 설정 완료 (→ Cloud Run URL)</li>
-            <li>콜드 스타트 로딩 UI (FR-7) — 폴링 첫 응답 전까지 표시</li>
-            <li>OCR 모델 조사: Tesseract / EasyOCR / PaddleOCR 비교 → 선정</li>
-            <li>OCR 인식 대상 언어 범위 정의 (소수 민족 언어 포함 여부)</li>
+            <li>OCR 검증 — Cherokee(<code>chr</code>) 대상 확정, 우제 생성 파이프라인에 통합(응답 <code>mean_ocr_score</code>)</li>
+            <li>콜드 스타트 로딩 UI (FR-7) — 동기 변환(최대 수 분) 대기 동안 표시</li>
           </ul>
         </div>
       </div>
@@ -279,8 +278,7 @@
           <span class="pill pill-blocked">우선 결정</span>
         </div>
         <div class="body">
-          후보: 300 DPI 벡터 면적 비교 / 외곽선 길이 비교 / 픽셀 커버리지 측정. 현재 <code>app/domain/metrics_calculator.py</code> 가 좌표 수 비교 placeholder.
-          <br/>우제의 SSIM 최적화 첫 프로토타입 직후 협의 권장.
+          우제 API가 응답 <code>metrics.mean_ink_saving</code>으로 자체 산출(기존 backend <code>metrics_calculator.py</code>는 제거됨). 산출 기준(면적/커버리지 등) 정의를 우제와 확인 필요.
         </div>
         <div class="owner">담당: 이소은 + 이우제 · 데드라인: Week 3 진입 전 (B-3 시작 전)</div>
       </div>
@@ -291,32 +289,31 @@
           <span class="pill pill-blocked">우선 결정</span>
         </div>
         <div class="body">
-          잉크량(ml) → CO2(g) 환산 공식. 논문/보고서 근거 확보 필요. 현재 placeholder <code>0.005 g/단위</code>.
+          잉크량 → CO2(g) 환산. 우제 응답엔 <code>mean_ink_saving</code>만 있고 CO2 없음 → 프론트 표시에 CO2가 필요한지 먼저 결정, 필요 시 환산 공식(논문 근거).
         </div>
         <div class="owner">담당: 이소은 · 데드라인: Week 3 진입 전 (B-4 시작 전)</div>
       </div>
 
-      <div class="open-item critical">
+      <div class="open-item resolved">
         <div class="header-row">
-          <span class="id">변환 결과 계약 불일치 (variants)</span>
-          <span class="pill pill-blocked">팀 결정</span>
+          <span class="id">✅ 변환 결과 계약 불일치 (variants) — 해소</span>
+          <span class="pill pill-done">resolved</span>
         </div>
         <div class="body">
-          프론트(Unit 1c)는 <code>result.variants[]</code>(여러 강도 선택) 기대, 백엔드(Unit 2)는 단일 <code>result</code> 생산. 그대로 연결 시 5개짜리 결과 페이지에 1개만 표시. AI 엔진(Unit 3) 미구현이라 다중 생성 가능 여부도 미정.
-          <br/>방향: A) 백엔드가 N개 변형 생성 / B) 프론트 단일 축소 / C) 임시 단일 래핑.
+          우제 Cherokee API가 <code>candidates[20]</code>(각 ttf_url·preview_url·metrics)을 반환 → 프론트 <code>FontList</code> 다중 결과 UX와 정렬. 기존 백엔드 단일 결과 계약은 폐기(backend 통째 대체).
         </div>
-        <div class="owner">담당: 소은(BE)·우제(AI)·정선(FE) · <strong>실 API 연결 선행 조건</strong></div>
+        <div class="owner">담당: 소은·우제·정선 · 2026-06-24 해소</div>
       </div>
 
-      <div class="open-item">
+      <div class="open-item resolved">
         <div class="header-row">
-          <span class="id">OCR 검증 언어 범위</span>
-          <span class="pill pill-pending">조사 필요</span>
+          <span class="id">✅ OCR 검증 언어 범위 — Cherokee 확정</span>
+          <span class="pill pill-done">resolved</span>
         </div>
         <div class="body">
-          한글·영문 + 소수 민족 언어 어디까지 검증할지. OCR 모델 선정 결과에 영향.
+          MVP는 Cherokee(<code>ocr_lang=chr</code>) 전용으로 확정. 우제 생성 API가 후보별 <code>mean_ocr_score</code> 산출에 사용.
         </div>
-        <div class="owner">담당: 류동현</div>
+        <div class="owner">담당: 류동현 · 2026-06-24 확정</div>
       </div>
 
       <div class="open-item resolved">
@@ -327,8 +324,8 @@
         <div class="body">
           <ul class="tight">
             <li><strong>Q1</strong> Backend↔AI 통합 = 단일 Cloud Run + 함수 호출</li>
-            <li><strong>Q2</strong> API 호출 = 비동기 폴링 (POST /convert 202 + GET /jobs/{id})</li>
-            <li><strong>Q3</strong> 다운로드 = GCS Signed URL TTL 24h</li>
+            <li><strong>Q2</strong> API 호출 = <s>비동기 폴링</s> → <strong>동기 단일 POST</strong>로 전환 (<code>POST /v1/font-generation/ttf</code>, 폴링 폐기)</li>
+            <li><strong>Q3</strong> 다운로드 = <s>GCS Signed URL</s> → 상대경로 <code>/v1/assets/...</code> GCS 프록시 서빙으로 전환</li>
             <li><strong>Q4</strong> Backend 구조 = Hexagonal + Light DDD</li>
             <li><strong>Open-4</strong> 의존성 도구 = uv</li>
             <li><strong>Open-5</strong> 베이스 이미지 = python:3.11-slim-bookworm</li>
@@ -402,6 +399,7 @@
             <tr><td>머지된 PR — Unit 2 설계/코드</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/8">#8</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/9">#9</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/10">#10</a></td></tr>
             <tr><td>머지된 PR — 프론트 UI</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/14">#14</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/18">#18</a></td></tr>
             <tr><td>머지된 PR — 배포·CORS·CI/CD·Swagger</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/19">#19</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/20">#20</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/21">#21</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/22">#22</a></td></tr>
+            <tr><td>이식 준비 PR (open · develop 대기)</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/26">#26</a> backend 골격 · <a href="https://github.com/GDSC-DGU/ecofont/pull/27">#27</a> infra 정리</td></tr>
           </tbody>
         </table>
       </div>
@@ -418,7 +416,7 @@
           <li>외부 리소스 변경 (배포 URL, GCP 프로젝트 ID 등)</li>
         </ul>
         AI 협업 시 위 트리거에서 자동 갱신됨. 직접 편집 시 본 파일 + <code>aidlc-docs/aidlc-state.md</code> 함께 확인.<br/>
-        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-24 (CI/CD 자동배포 + Swagger + Artifact Registry cleanup 완료, variants 계약 결정 대기)
+        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-24 (우제 Cherokee 생성 API로 백엔드 전환 — 비동기 폴링 폐기·동기 단일 POST·GCS asset, 이식 준비 PR #26·#27 develop 머지 대기, variants 해소)
       </div>
     </div>
   </body>

@@ -302,3 +302,17 @@
 **Note**: variants 계약 불일치를 신규 critical Open Item으로 추가(프론트 다중 vs 백엔드 단일). 실 API 연결 선행 조건, 소은이 팀 전달 예정.
 
 ---
+
+## 백엔드 아키텍처 전환 — 우제 Cherokee 생성 API가 비동기 backend 통째 대체
+
+**Timestamp**: 2026-06-24T13:30:00Z
+**User Input**: "우제가 fast api 하나랑 ai 모듈들을 따로 만들었대. 그래서 이걸 어디 폴더에다가 올려야 되냐고 물어봤어" / "우제 fast api가 프론트엔드가 바로 부를 엔드포인트야. 하나로 통일하기로했어. 서버를 따로 둘 이유가 없다고 생각해서 우제가 만든 api가 프론트엔드에서 부를 엔드포인트임." / "비동기 job 폴링을 버리기로 했대. 그냥 post한번에 응답까지 받기로 합의했대" / (EcoFont Client API Spec 전문 공유) "단순한 구조니까 지워야하는건 다 지우면 돼" / "우제 코드 들어오고 알아서 정리할테니까 필요없는 코드는 삭제하는게 더 편할거같은데? 그리고 backend하위에 들어온다고 가정하고 진행해줘 그냥." / "fe랑 라이브 깨져도 괜찮은데? 별도 브랜치 파서 정리해도 어차피 develop에 머지할거야" / "infra 정리 PR 만들어줘"
+**AI Response**: 우제가 별도 FastAPI + AI 모듈을 제작 → 통합 방식 논의(in-process 라이브러리 vs 별도 마이크로서비스) 끝에, 우제 API가 기존 apps/backend(Unit 2 비동기 오케스트레이터)를 통째 대체하기로 확정. 핵심 결정: ① 프론트 직접 호출 메인 엔드포인트 = `POST /v1/font-generation/ttf`(multipart) ② 동기 단일 응답 — 비동기 job 폴링(`/jobs/{id}`) 전면 폐기 ③ 도메인 Cherokee 전용(cmap 자동 판정, 후보 20개 + 평균 OCR 점수) ④ 결과물은 상대경로 URL `/v1/assets/{job_id}/...`로 다운로드, 저장은 GCS(Cloud Run multi-instance 대응 → Signed URL 폐기·프록시 서빙) ⑤ 업로드 한도 10MB→50MB. PR #26(backend 골격: 폴링·job_store·ai_engine stub·domain/ports 제거, 운영 배선+/health만 남김, gcs_assets 모듈 추가, config 50MB+asset bucket, ai-engine README를 이식 가이드로 재작성 — import/ruff/TestClient /health 200 검증), PR #27(infra: input/output→assets 단일 버킷, self-signer 제거, env 교체, terraform validate 통과) 생성. 사이징(CPU/메모리/timeout)은 우제 코드 부하 실측 후 별도 조정.
+**Changes**:
+- apps/backend: convert_font.py·memory_job_store.py·inprocess_ai_engine.py·fonttools_processor.py·gcs_storage.py·ports/*·domain/* 삭제; main/config/routes/schemas 정리; adapters/outbound/gcs_assets.py 신규
+- apps/ai-engine/README.md: optimize_glyphs in-process 합의 폐기 → Cherokee API 이식 가이드(계약 전문·GCS 배선·운영배선·체크리스트)
+- infra: storage.tf(assets 단일 버킷)·iam.tf(self-signer 제거)·cloud_run.tf(env)·outputs.tf·README.md
+**Context**: Construction Phase - 우제 Cherokee API 이식 준비(코드/인프라), develop 머지 대기 (PR #26·#27)
+**Note**: variants 계약 불일치 해소(우제 candidates[20] ↔ 프론트 FontList). 후속: Unit 1b 프론트 폴링→동기 단일 POST 교체, 우제 코드 통합(라우터+gcs_assets·ai모듈 backend 하위·pyproject/Dockerfile·사이징), 설계문서(unit-2 functional-design)·vision/CLAUDE.md MVP(Cherokee)·OCR 언어범위(chr) 동기화.
+
+---
