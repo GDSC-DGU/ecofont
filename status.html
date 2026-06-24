@@ -158,7 +158,7 @@
         </div>
         <div class="progress-bar" aria-label="AI-DLC 진행 막대">
           <div class="ps-inception">Inception ✓</div>
-          <div class="ps-construction">Construction 중 (Unit 1a·1b·1c 완료 / Unit 2·4 배포 완료)</div>
+          <div class="ps-construction">Construction 중 (Unit 1a·1b·1c 완료 / Unit 2·4 배포 완료 · CI/CD 자동배포)</div>
           <div class="ps-operations">Operations</div>
         </div>
         <div style="margin-top: 14px; font-size: 14px; color: var(--text-muted)">
@@ -194,14 +194,14 @@
             <tr>
               <td><strong>Unit 1c</strong><br/>글로시모피즘 UI + 리스트 뷰</td>
               <td>이정선 / 류동현</td>
-              <td><span class="pill pill-done">완료 (커밋 대기)</span></td>
+              <td><span class="pill pill-done">완료 (PR #18)</span></td>
               <td>글로시모피즘 테마(backdrop-filter), Logo·favicon, 결과 페이지 세로 리스트 뷰(FontList/FontListItem), ResultSummary, ExportCard(1200×630 이미지 Export), LoadingOverlay 포털 수정, @mui/icons-material, FontComparison pill 형태. 산출물: <a href="aidlc-docs/construction/unit-1c/">aidlc-docs/construction/unit-1c/</a></td>
             </tr>
             <tr>
               <td><strong>Unit 2</strong><br/>Backend</td>
               <td>이소은</td>
-              <td><span class="pill pill-done">배포 완료 (placeholder AI)</span></td>
-              <td>PR #8·#9·#10 머지 완료. <code>uv.lock</code> 생성 → <code>docker build/push</code> → Cloud Run 가동·<code>/health</code> 200 검증 완료. 현재 이미지 <code>backend:0.1.0</code> 은 identity placeholder AI(Unit 3 미머지)</td>
+              <td><span class="pill pill-done">배포 완료 + CI 자동배포 (placeholder AI)</span></td>
+              <td>PR #8·#9·#10 머지. CORS 추가(#20). Cloud Run 라이브, <strong>develop push 시 CI 자동배포</strong>(이미지=git SHA). Swagger 문서 <a href="https://ecofont-backend-pdixgz2hlq-du.a.run.app/docs"><code>/docs</code></a>(#22). 현재 AI는 identity placeholder(Unit 3 미머지)</td>
             </tr>
             <tr>
               <td><strong>Unit 3</strong><br/>AI Engine</td>
@@ -213,7 +213,7 @@
               <td><strong>Unit 4</strong><br/>Infrastructure</td>
               <td>이소은</td>
               <td><span class="pill pill-done">완료</span></td>
-              <td>GCP <code>ecofont-re</code> 빌링 연결 + API 7종 + 상태버킷 + <code>terraform apply</code>(8 리소스) 완료. Cloud Run 라이브. 후속: Artifact Registry cleanup 정책 (idle 누적 방지)</td>
+              <td>GCP <code>ecofont-re</code> 빌링 연결 + API 활성화 + 상태버킷 + <code>terraform apply</code> 완료. Cloud Run 라이브. CI/CD(WIF 키리스, #21) + Artifact Registry cleanup 정책(keep-5/30d) 완료.</td>
             </tr>
           </tbody>
         </table>
@@ -228,10 +228,10 @@
         <div class="card">
           <h3>이소은 (Backend + Infra)</h3>
           <ul class="tight">
-            <li>✅ Unit 2 Build &amp; Test 완료 — <code>uv.lock</code> 생성 + 이미지 빌드/푸시</li>
-            <li>✅ Unit 4 인프라 완료 — GCP <code>ecofont-re</code> 프로비저닝 + Cloud Run 배포·검증</li>
-            <li>Unit 3(우제) 백엔드 머지 시 이미지 재빌드 → 새 revision 배포</li>
-            <li>그때 설계 문서/CLAUDE.md의 <code>apps/ai-engine</code> 전제 → backend 하위로 동기화 (rule 5.3)</li>
+            <li>✅ Unit 2 배포 + CORS(#20) + CI/CD 자동배포(#21) + Swagger(#22) 완료</li>
+            <li>✅ Unit 4 인프라 완료 — 프로비저닝 + Artifact Registry cleanup 정책</li>
+            <li>Unit 3(우제) 머지 시 CI가 자동 재배포 → 설계/CLAUDE.md의 <code>apps/ai-engine</code> 전제를 backend 하위로 동기화 (rule 5.3)</li>
+            <li><strong>variants 계약 결정</strong> 팀 전달 (프론트 다중 vs 백엔드 단일) — 실 API 연결 선행</li>
             <li><strong>Open-1·Open-2 협의</strong>: 우제와 잉크 절약률 산출법, CO2 계수 결정</li>
           </ul>
         </div>
@@ -258,7 +258,7 @@
         <div class="card">
           <h3>류동현 (Frontend 지원 + OCR)</h3>
           <ul class="tight">
-            <li>Vercel 환경변수 <code>NEXT_PUBLIC_BACKEND_URL</code> 추가 → <code>https://ecofont-backend-pdixgz2hlq-du.a.run.app</code> (Cloud Run 배포 완료)</li>
+            <li>✅ Vercel 환경변수 <code>NEXT_PUBLIC_BACKEND_URL</code> 설정 완료 (→ Cloud Run URL)</li>
             <li>콜드 스타트 로딩 UI (FR-7) — 폴링 첫 응답 전까지 표시</li>
             <li>OCR 모델 조사: Tesseract / EasyOCR / PaddleOCR 비교 → 선정</li>
             <li>OCR 인식 대상 언어 범위 정의 (소수 민족 언어 포함 여부)</li>
@@ -296,15 +296,16 @@
         <div class="owner">담당: 이소은 · 데드라인: Week 3 진입 전 (B-4 시작 전)</div>
       </div>
 
-      <div class="open-item">
+      <div class="open-item critical">
         <div class="header-row">
-          <span class="id">Open-3 · CI/CD 파이프라인</span>
-          <span class="pill pill-pending">후속 의제</span>
+          <span class="id">변환 결과 계약 불일치 (variants)</span>
+          <span class="pill pill-blocked">팀 결정</span>
         </div>
         <div class="body">
-          Vercel(FE) 자동 배포 + GitHub Actions → GCP(BE) 자동 배포. MVP 코어 완료 후. 현재는 수동 <code>docker build/push</code> + <code>terraform apply</code>.
+          프론트(Unit 1c)는 <code>result.variants[]</code>(여러 강도 선택) 기대, 백엔드(Unit 2)는 단일 <code>result</code> 생산. 그대로 연결 시 5개짜리 결과 페이지에 1개만 표시. AI 엔진(Unit 3) 미구현이라 다중 생성 가능 여부도 미정.
+          <br/>방향: A) 백엔드가 N개 변형 생성 / B) 프론트 단일 축소 / C) 임시 단일 래핑.
         </div>
-        <div class="owner">담당: 팀 합의 (소은 인프라 측 주도 가능)</div>
+        <div class="owner">담당: 소은(BE)·우제(AI)·정선(FE) · <strong>실 API 연결 선행 조건</strong></div>
       </div>
 
       <div class="open-item">
@@ -333,6 +334,8 @@
             <li><strong>Open-5</strong> 베이스 이미지 = python:3.11-slim-bookworm</li>
             <li><strong>HTTPS</strong> = Cloud Run default 자동 적용 (NFR-U2-SEC-5)</li>
             <li><strong>Idle 비용</strong> = min_instances=0 + Lifecycle 1d → 거의 $0</li>
+            <li><strong>Open-3 CI/CD</strong> = Backend GitHub Actions→Cloud Run 자동배포(WIF 키리스) + Frontend Vercel 자동배포 (#21)</li>
+            <li><strong>GCP 인증</strong> = CI는 Workload Identity Federation(키리스), 장기 비밀키 없음</li>
           </ul>
         </div>
       </div>
@@ -393,10 +396,12 @@
             <tr><td>GitHub Repository</td><td><a href="https://github.com/GDSC-DGU/ecofont">GDSC-DGU/ecofont</a></td></tr>
             <tr><td>Frontend 배포 (Vercel)</td><td><a href="https://ecofont.vercel.app/">https://ecofont.vercel.app/</a></td></tr>
             <tr><td>GCP 프로젝트 ID</td><td><code>ecofont-re</code> (리전 asia-northeast3 · 빌링 연결됨)</td></tr>
-            <tr><td>Backend 배포 (Cloud Run)</td><td><a href="https://ecofont-backend-pdixgz2hlq-du.a.run.app">https://ecofont-backend-pdixgz2hlq-du.a.run.app</a> — <code>/health</code> 200 확인</td></tr>
-            <tr><td>머지된 PR — Functional Design + NFR Requirements</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/8">#8</a></td></tr>
-            <tr><td>머지된 PR — NFR Design + Infrastructure Design</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/9">#9</a></td></tr>
-            <tr><td>머지된 PR — Code Generation + onboarding + 정합</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/10">#10</a></td></tr>
+            <tr><td>Backend 배포 (Cloud Run)</td><td><a href="https://ecofont-backend-pdixgz2hlq-du.a.run.app">https://ecofont-backend-pdixgz2hlq-du.a.run.app</a> — <code>/health</code> 200</td></tr>
+            <tr><td>Backend API 문서 (Swagger)</td><td><a href="https://ecofont-backend-pdixgz2hlq-du.a.run.app/docs">/docs</a> · <a href="https://ecofont-backend-pdixgz2hlq-du.a.run.app/redoc">/redoc</a> · <code>/openapi.json</code></td></tr>
+            <tr><td>CI/CD (Backend 자동배포)</td><td>GitHub Actions <code>.github/workflows/backend-deploy.yml</code> — develop push 시 Cloud Run 자동배포</td></tr>
+            <tr><td>머지된 PR — Unit 2 설계/코드</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/8">#8</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/9">#9</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/10">#10</a></td></tr>
+            <tr><td>머지된 PR — 프론트 UI</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/14">#14</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/18">#18</a></td></tr>
+            <tr><td>머지된 PR — 배포·CORS·CI/CD·Swagger</td><td><a href="https://github.com/GDSC-DGU/ecofont/pull/19">#19</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/20">#20</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/21">#21</a> · <a href="https://github.com/GDSC-DGU/ecofont/pull/22">#22</a></td></tr>
           </tbody>
         </table>
       </div>
@@ -413,7 +418,7 @@
           <li>외부 리소스 변경 (배포 URL, GCP 프로젝트 ID 등)</li>
         </ul>
         AI 협업 시 위 트리거에서 자동 갱신됨. 직접 편집 시 본 파일 + <code>aidlc-docs/aidlc-state.md</code> 함께 확인.<br/>
-        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-24 (Unit 1c 머지 + Unit 2·4 Backend Cloud Run 배포·인프라 프로비저닝 완료 직후)
+        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-24 (CI/CD 자동배포 + Swagger + Artifact Registry cleanup 완료, variants 계약 결정 대기)
       </div>
     </div>
   </body>
