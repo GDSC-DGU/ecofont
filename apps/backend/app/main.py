@@ -65,11 +65,40 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("shutdown_complete")
 
 
+API_DESCRIPTION = """
+TTF 폰트를 잉크 절약형 **에코폰트**로 변환하는 API.
+
+### 변환 흐름 (비동기 폴링)
+1. **`POST /convert`** — `.ttf` 파일을 multipart로 업로드 → `202` + `job_id` 수신
+2. **`GET /jobs/{job_id}`** — 완료까지 폴링. `status`가 `pending`→`processing`→`done`(또는 `failed`)으로 전이
+   - `processing`: `progress`(0~1) + `stage`(`uploading`/`parsing`/`optimizing`/`finalizing`)
+   - `done`: `result.download_url`(GCS Signed URL, 24h) + 지표(`ink_saving_rate`, `carbon_reduction_g`)
+3. 프론트는 `download_url`을 `fetch` 해 변환된 TTF를 받는다 (버킷 CORS 허용됨).
+
+### 프론트 연동 메모
+- 제약: 단일 `.ttf` ≤ 10MB. 위반 시 `413`/`415`/`400` + `{error, message}` 본문.
+- CORS: Vercel(프로덕션·preview)·localhost 출처 허용.
+- 폴링 권장 간격 2~3초. job은 만료되면 `404`.
+"""
+
+tags_metadata = [
+    {"name": "convert", "description": "폰트 변환 작업 시작 및 상태 폴링"},
+    {"name": "health", "description": "Cloud Run 헬스 체크 (probe용)"},
+]
+
 app = FastAPI(
     title="Eco-Font Backend",
-    description="TTF 폰트를 잉크 절약형 에코폰트로 변환하는 API",
-    version="0.1.0",
+    description=API_DESCRIPTION,
+    version="0.2.0",
     lifespan=lifespan,
+    openapi_tags=tags_metadata,
+    servers=[
+        {
+            "url": "https://ecofont-backend-pdixgz2hlq-du.a.run.app",
+            "description": "Production (Cloud Run)",
+        },
+        {"url": "http://localhost:8080", "description": "Local 개발"},
+    ],
 )
 app.middleware("http")(request_id_middleware)
 

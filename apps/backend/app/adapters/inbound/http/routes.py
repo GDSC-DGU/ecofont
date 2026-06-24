@@ -31,7 +31,13 @@ def get_use_case(request: Request) -> ConvertFontUseCase:
 router = APIRouter()
 
 
-@router.get("/health", response_model=HealthResponse)
+@router.get(
+    "/health",
+    response_model=HealthResponse,
+    tags=["health"],
+    summary="헬스 체크",
+    description='항상 `{"status": "ok"}` 반환. Cloud Run startup/liveness probe가 사용.',
+)
 def health() -> HealthResponse:
     return HealthResponse()
 
@@ -40,10 +46,17 @@ def health() -> HealthResponse:
     "/convert",
     response_model=ConvertAcceptedResponse,
     status_code=status.HTTP_202_ACCEPTED,
+    tags=["convert"],
+    summary="폰트 변환 시작",
+    description=(
+        "`.ttf` 파일을 multipart(`file` 필드)로 업로드한다. 즉시 `202`와 `job_id`를 "
+        "반환하고 변환은 백그라운드에서 진행 → `GET /jobs/{job_id}`로 폴링."
+    ),
+    response_description="변환 작업이 접수됨 (job_id + 폴링 경로)",
     responses={
-        400: {"model": ErrorBody},
-        413: {"model": ErrorBody},
-        415: {"model": ErrorBody},
+        400: {"model": ErrorBody, "description": "빈 요청/파일 누락 (INVALID_REQUEST)"},
+        413: {"model": ErrorBody, "description": "10MB 초과 (FILE_TOO_LARGE)"},
+        415: {"model": ErrorBody, "description": "TTF 아님 (UNSUPPORTED_FILE_TYPE)"},
     },
 )
 async def convert(
@@ -66,9 +79,7 @@ async def convert(
     if len(data) == 0:
         raise HTTPException(
             status_code=400,
-            detail=ErrorBody(
-                error="INVALID_REQUEST", message="파일을 첨부해주세요."
-            ).model_dump(),
+            detail=ErrorBody(error="INVALID_REQUEST", message="파일을 첨부해주세요.").model_dump(),
         )
     if len(data) > settings.max_file_size_bytes:
         raise HTTPException(
@@ -81,9 +92,7 @@ async def convert(
 
     job_id = await use_case.start_job(data, Path(filename).name)
     logger.info("convert_accepted", filename=filename, size_bytes=len(data), job_id=job_id)
-    return ConvertAcceptedResponse(
-        job_id=job_id, status="pending", status_url=f"/jobs/{job_id}"
-    )
+    return ConvertAcceptedResponse(job_id=job_id, status="pending", status_url=f"/jobs/{job_id}")
 
 
 @router.get(
@@ -91,7 +100,16 @@ async def convert(
     response_model=(
         JobPendingResponse | JobProcessingResponse | JobDoneResponse | JobFailedResponse
     ),
-    responses={404: {"model": ErrorBody}},
+    tags=["convert"],
+    summary="변환 작업 상태 조회 (폴링)",
+    description=(
+        "`status`에 따라 응답 형태가 달라진다: `pending` / `processing`(progress·stage) / "
+        "`done`(result) / `failed`(error·message). 2~3초 간격 폴링 권장."
+    ),
+    response_description="작업 상태 (status에 따라 4가지 형태 중 하나)",
+    responses={
+        404: {"model": ErrorBody, "description": "존재하지 않거나 만료된 job (JOB_NOT_FOUND)"}
+    },
 )
 async def get_job(
     job_id: str,
