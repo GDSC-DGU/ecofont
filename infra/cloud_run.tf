@@ -77,6 +77,14 @@ resource "google_cloud_run_v2_service" "backend" {
     google_storage_bucket_iam_member.backend_input,
     google_storage_bucket_iam_member.backend_output,
   ]
+
+  # 이미지 배포는 CI(GitHub Actions의 gcloud run deploy)가 담당 → Terraform이
+  # git SHA 태그를 var.backend_image(고정값)로 되돌리지 않도록 image 변경 무시.
+  lifecycle {
+    ignore_changes = [
+      template[0].containers[0].image,
+    ]
+  }
 }
 
 # 공개 호출 허용 (인증 미적용, NFR-U2-SEC-4)
