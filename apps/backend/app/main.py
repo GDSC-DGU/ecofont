@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 import structlog
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.adapters.inbound.http.middleware import request_id_middleware
 from app.adapters.inbound.http.routes import router
@@ -71,4 +72,18 @@ app = FastAPI(
     lifespan=lifespan,
 )
 app.middleware("http")(request_id_middleware)
+
+# CORS는 가장 바깥에서 동작해야 preflight(OPTIONS)와 에러 응답에도 헤더가 붙는다.
+# add_middleware는 마지막에 추가된 것이 최외곽 → request_id_middleware 등록 뒤에 추가.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins_list,
+    allow_origin_regex=settings.cors_allow_origin_regex or None,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+    allow_credentials=False,  # 쿠키 미사용(다운로드는 GCS Signed URL) → 자격증명 불필요
+    expose_headers=["X-Request-ID"],
+    max_age=3600,
+)
+
 app.include_router(router)
