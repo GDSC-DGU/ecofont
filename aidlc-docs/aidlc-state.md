@@ -4,8 +4,8 @@
 
 - **Project Type**: Brownfield
 - **Start Date**: 2026-05-12T00:00:00Z
-- **Last Updated**: 2026-06-24T10:30:00Z
-- **Current Stage**: CONSTRUCTION / Unit 1a·1b·1c 완료 + Unit 2·4 배포 완료 (Cloud Run 라이브)
+- **Last Updated**: 2026-06-24T11:10:00Z
+- **Current Stage**: CONSTRUCTION / Unit 1a·1b·1c 완료 + Unit 2·4 배포·CI/CD 자동배포 라이브
 
 ## Workspace State
 
@@ -60,22 +60,21 @@
 ## Current Status
 
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 2·4 배포 완료 — Backend Cloud Run 라이브
-- **배포 정보**: GCP 프로젝트 `ecofont-re` (asia-northeast3) · Backend URL `https://ecofont-backend-pdixgz2hlq-du.a.run.app` (`/health` 200) · 이미지 `backend:0.1.0` (identity placeholder AI) · `terraform apply` 8 리소스
+- **Current Stage**: Unit 2·4 배포 + CI/CD 자동배포 라이브 — Backend Cloud Run 운영 중
+- **배포 정보**: GCP 프로젝트 `ecofont-re` (asia-northeast3) · Backend URL `https://ecofont-backend-pdixgz2hlq-du.a.run.app` (`/health` 200, Swagger `/docs`) · 이미지=git SHA(CI 자동배포) · identity placeholder AI
 - **머지 완료 (develop)**:
-  - Unit 1a Frontend UI — PR #14 (mock 변환 + FontFace 미리보기 + 비교 입력 UI)
-  - Unit 1b Frontend API 연동 (mock 폴링) — PR #14
-  - Unit 1c 글로시모피즘 UI 리디자인 — PR #18 (FontList 리스트 뷰, ExportCard, Logo, ResultSummary, LoadingOverlay 포털 수정, ttf_blob mock 구조, @mui/icons-material)
-  - Unit 2 Backend Functional/NFR/Infra Design + Code Generation — PR #8·#9·#10
-  - 팀 SSOT 페이지(`status.html`) + CLAUDE.md §5.7 — PR #11
-  - Unit 2 Build & Test + Unit 4 인프라 배포 (uv.lock·이미지·terraform apply) — PR #19 (머지 진행 중)
+  - Unit 1a/1b Frontend UI + API 연동(mock) — PR #14
+  - Unit 1c 글로시모피즘 UI 리디자인 — PR #18 (FontList, ExportCard, Logo, ResultSummary, ttf_blob mock, @mui/icons-material)
+  - Unit 2 Backend 설계+코드 — PR #8·#9·#10 / SSOT+CLAUDE.md §5.7 — PR #11
+  - Unit 2 Build & Test + Unit 4 인프라 배포 — PR #19
+  - CORS — PR #20 / CI/CD(WIF 키리스) — PR #21 / Swagger 보강 — PR #22
+  - Artifact Registry cleanup(keep-5/30d) + Cloud Run client 드리프트 무시 — chore/ssot-and-ar-cleanup
+- **CI/CD**: `develop`에 `apps/backend/**`·`infra/cloud_run.tf` push 시 GitHub Actions가 빌드→Artifact Registry(SHA 태그)→`gcloud run deploy`. 실패 시 기존 revision 유지(트래픽 안 옮겨감). 인프라=Terraform, 이미지=CI 분리(`ignore_changes`).
 - **Next Stage (우선순위 순)**:
-  1. Open-1 잉크 절약률 산출법, Open-2 CO2 계수 결정 (이소은 + 이우제)
-  2. Unit 3 AI Engine 시작 (이우제·류동현) — 실구현 backend 머지 시 이미지 재빌드 → 새 revision 배포 (이소은)
-  3. AI를 backend 하위로 구현하는 방향 — 머지 시 설계 문서/CLAUDE.md의 `apps/ai-engine` 전제를 backend 하위로 동기화 (rule 5.3)
-  4. Unit 1b 실 API 연결 (`src/mocks/convertFont.ts` 교체 + Vercel `NEXT_PUBLIC_BACKEND_URL` = 위 URL, 이소은 직접)
-- **검증 상태**: Unit 1c `pnpm tsc --noEmit` 에러 없음, `pnpm build` 성공. Dead code(FontGrid·FontCard·ResultMetrics·DownloadResult) 삭제 완료. Python AST parse 25/25 통과. `uv.lock` 생성 완료, 이미지 빌드/푸시 + Cloud Run `/health` 200 검증 완료.
-- **남은 Open Items**: Open-1 잉크 산출법 (placeholder=좌표 수 비교), Open-2 CO2 계수 (placeholder=0.005g/단위), Open-3 CI/CD, OCR 언어 범위
-- **결정된 운영 원칙**: HTTPS는 Cloud Run 기본 자동 적용(NFR-U2-SEC-5), idle 시 GCP $0 (min_instances=0 + Lifecycle 1d)
-- **AI Engine 의존**: `apps/backend/app/adapters/outbound/inprocess_ai_engine.py` identity placeholder — `apps/ai-engine/README.md` 가 우제 시작 시점 가이드
-- **현재 브랜치**: `develop` (Unit 1a/1b/2 모두 머지 완료, 미커밋 변경 없음)
+  1. **variants 계약 결정** (소은·우제·정선) — 실 API 연결 선행 조건
+  2. Open-1 잉크 절약률 산출법, Open-2 CO2 계수 결정 (이소은 + 이우제)
+  3. Unit 3 AI Engine 시작 (이우제·류동현) — backend 하위로 구현 예정 → 머지 시 CI 자동 재배포 + `apps/ai-engine` 전제를 backend 하위로 동기화 (rule 5.3)
+  4. Unit 1b 실 API 연결 (`src/mocks/convertFont.ts` 교체) — variants 결정 + Unit 3 후
+- **남은 Open Items**: variants 계약 불일치(신규, critical), Open-1 잉크 산출법, Open-2 CO2 계수, OCR 언어 범위. (Open-3 CI/CD 해결됨)
+- **결정된 운영 원칙**: HTTPS 자동(NFR-U2-SEC-5), idle 시 GCP $0, CORS 허용(Vercel·localhost), CI 인증=WIF 키리스
+- **현재 브랜치**: `chore/ssot-and-ar-cleanup` (SSOT 갱신 + AR cleanup, 커밋 예정)

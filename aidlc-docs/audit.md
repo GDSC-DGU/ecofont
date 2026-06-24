@@ -293,3 +293,12 @@
 **Note**: 사용자 메모 — ai-engine 디렉토리 미사용, AI는 backend 하위로 구현 예정(아직 origin 미머지). 머지 시 설계 문서/CLAUDE.md의 apps/ai-engine 전제를 backend 하위로 동기화 필요(rule 5.3).
 
 ---
+## CI/CD 자동배포 + Swagger + Artifact Registry cleanup + SSOT 갱신
+
+**Timestamp**: 2026-06-24T11:10:00Z
+**User Input**: "다음 작업 진행 (CICD)" / "python 서버 swagger도 작성해줘" / "SSOT 갱신과 Artifact Registry cleanup 정책 진행"
+**AI Response**: ① CI/CD(PR #21) — GitHub Actions가 develop의 apps/backend/** 변경 push 시 WIF(키리스) 인증으로 이미지 빌드→Artifact Registry(git SHA 태그)→gcloud run deploy. cloud_run.tf image/client ignore_changes로 Terraform-CI 분리. infra/cicd.tf(WIF 풀/프로바이더 + 배포 SA + 최소 IAM), repo 변수 GCP_WIF_PROVIDER·GCP_DEPLOYER_SA 설정. #22 머지로 파이프라인 첫 실행 성공 검증(라이브 0.2.0). ② Swagger(PR #22) — FastAPI 자동 문서에 설명·태그·예시·servers URL 보강. ③ Artifact Registry cleanup 정책(keep-recent-5 + delete-older-than-30d) + Cloud Run client 드리프트 ignore. ④ status.html·aidlc-state.md SSOT 갱신.
+**Context**: Construction Phase - Open-3 CI/CD 해결, 운영 자동화
+**Note**: variants 계약 불일치를 신규 critical Open Item으로 추가(프론트 다중 vs 백엔드 단일). 실 API 연결 선행 조건, 소은이 팀 전달 예정.
+
+---

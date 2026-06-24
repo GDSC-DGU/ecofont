@@ -6,7 +6,7 @@ resource "google_cloud_run_v2_service" "backend" {
 
   template {
     service_account                  = google_service_account.backend.email
-    timeout                          = "600s"
+    timeout                          = "1200s" # 20분 — SSIM 최적화(Unit 3) 여유
     max_instance_request_concurrency = 1
 
     scaling {
@@ -20,7 +20,7 @@ resource "google_cloud_run_v2_service" "backend" {
       resources {
         limits = {
           cpu    = "2"
-          memory = "2Gi"
+          memory = "4Gi" # SSIM 최적화 OOM 방어 (메모리 상향 비용은 미미)
         }
         cpu_idle          = false
         startup_cpu_boost = false
@@ -80,9 +80,12 @@ resource "google_cloud_run_v2_service" "backend" {
 
   # 이미지 배포는 CI(GitHub Actions의 gcloud run deploy)가 담당 → Terraform이
   # git SHA 태그를 var.backend_image(고정값)로 되돌리지 않도록 image 변경 무시.
+  # client/client_version은 gcloud deploy가 찍는 메타 → 무시하지 않으면 apply마다 드리프트.
   lifecycle {
     ignore_changes = [
       template[0].containers[0].image,
+      client,
+      client_version,
     ]
   }
 }
