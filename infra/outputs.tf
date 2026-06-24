@@ -3,14 +3,9 @@ output "backend_url" {
   value       = google_cloud_run_v2_service.backend.uri
 }
 
-output "input_bucket" {
-  description = "GCS input 버킷 이름"
-  value       = google_storage_bucket.input.name
-}
-
-output "output_bucket" {
-  description = "GCS output 버킷 이름"
-  value       = google_storage_bucket.output.name
+output "asset_bucket" {
+  description = "GCS asset 버킷 이름 (생성 결과물 저장·서빙)"
+  value       = google_storage_bucket.assets.name
 }
 
 output "artifact_registry_repo" {

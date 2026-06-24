@@ -8,7 +8,7 @@ Eco-Font GCP 리소스 정의. 출처: `aidlc-docs/construction/unit-2/infrastru
 |--------|------|
 | Provider + state backend | `main.tf` |
 | Artifact Registry (Docker) | `artifact_registry.tf` |
-| GCS input/output 버킷 + Lifecycle 1일 | `storage.tf` |
+| GCS assets 버킷 + Lifecycle 1일 | `storage.tf` |
 | Service Account + IAM (최소 권한) | `iam.tf` |
 | Cloud Run v2 service | `cloud_run.tf` |
 
@@ -53,7 +53,7 @@ terraform apply -var-file=terraform.tfvars
 ## 출력값
 
 - `backend_url`: Cloud Run 서비스 URL (Frontend 환경변수로 설정)
-- `input_bucket` / `output_bucket`: GCS 버킷 이름 (디버깅용)
+- `asset_bucket`: GCS 결과물 버킷 이름 (생성 결과물 저장·서빙)
 - `artifact_registry_repo`: 이미지 푸시 대상 URL prefix
 - `service_account_email`: Cloud Run SA 이메일
 
@@ -77,7 +77,7 @@ terraform apply -var-file=terraform.tfvars
 | 리소스 | idle 시 비용 |
 |--------|--------------|
 | Cloud Run | **$0** — `min_instances=0`, 요청 없으면 인스턴스 부재 |
-| GCS input/output 버킷 | ~$0 — Lifecycle 1일 자동 삭제로 파일 누적 없음 |
+| GCS assets 버킷 | ~$0 — Lifecycle 1일 자동 삭제로 파일 누적 없음 |
 | Artifact Registry | ~$0.07/이미지/월 — 이미지 1~2개 유지 시 무시 가능 (cleanup 정책은 후속 과제) |
 | IAM·SA | $0 |
 | Cloud Logging | $0 — 무료 티어 50GB/월 |
