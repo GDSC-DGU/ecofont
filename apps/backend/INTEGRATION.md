@@ -155,7 +155,7 @@ Error:
 
 ## 8. 이식 체크리스트
 
-1. [ ] 우제 FastAPI 코드를 레포에 배치 (위치: 이 디렉토리 또는 `apps/backend` 대체 — 팀 확정)
+1. [ ] 우제 FastAPI 코드를 `apps/backend/app/` 하위에 배치 (backend 통째 대체 확정)
 2. [ ] 결과물 저장을 로컬 → `put_asset`(GCS)로 교체 (§4.1)
 3. [ ] `/v1/assets/{job_id}/{rel_path:path}` 다운로드 라우트 추가 (§4.2)
 4. [ ] `gcs_asset_bucket` 설정 + 운영 배선(CORS·50MB·health·로깅) 이식 (§5)

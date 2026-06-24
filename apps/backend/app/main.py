@@ -2,7 +2,7 @@
 
 우제 Cherokee 폰트 생성 API가 기존 비동기 오케스트레이터를 통째 대체한다.
 이 파일은 우제 라우터가 붙기 전의 골격(운영 배선 + /health)이다.
-이식 가이드: `apps/ai-engine/README.md`.
+이식 가이드: `apps/backend/INTEGRATION.md`.
 """
 
 from __future__ import annotations

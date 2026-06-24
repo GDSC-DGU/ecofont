@@ -37,8 +37,7 @@ AI가 빠르게 컨텍스트를 잡고 일관되게 작업하기 위한 인덱�
 ecofont/
 ├── apps/
 │   ├── frontend/      # Next.js  ← 코드
-│   ├── backend/       # FastAPI (Hexagonal + Light DDD) ← 코드
-│   └── ai-engine/     # AI 최적화 + OCR 검증 (우제·동현 시작 대기, README만)
+│   └── backend/       # FastAPI — 우제 Cherokee 생성 API 이식 대기 (가이드: apps/backend/INTEGRATION.md) ← 코드
 ├── infra/             # Terraform (Cloud Run + GCS + Artifact Registry + IAM) ← 코드
 ├── docs/              # 팀 원본 문서
 ├── aidlc-docs/        # AI-DLC 산출물
@@ -144,7 +143,7 @@ INCEPTION (완료) → CONSTRUCTION (Unit 1a·1b·1c·2 완료 — Unit 3·4 진
 | 경로 | 찾는 정보 |
 |------|-----------|
 | `apps/backend/README.md` | Backend 로컬 실행·컨테이너 빌드·아키텍처 요약 |
-| `apps/ai-engine/README.md` | 우제·동현 Unit 3 시작 가이드 (인터페이스 계약, 통합 절차) |
+| `apps/backend/INTEGRATION.md` | 우제 Cherokee API 이식 가이드 (계약·GCS 배선·운영배선·체크리스트) |
 | `infra/README.md` | Terraform 배포 절차, idle 비용, NFR 매핑, 후속 의제 |
 | `status.html` | 팀 SSOT 대시보드 — 진행·결정·문서 위치 한눈에 (브라우저로 열기, 마일스톤 시 갱신 → 규칙 5.7) |
 
