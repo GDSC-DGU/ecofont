@@ -1,17 +1,26 @@
 import { style } from "@vanilla-extract/css";
-import { vars } from "@/styles/theme.css";
+import { media, vars } from "@/styles/theme.css";
 
 export const overlay = style({
   position: "fixed",
-  inset: 0,
-  zIndex: 100,
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 200,
   display: "grid",
   placeItems: "center",
   padding: vars.space.md,
-  background: vars.color.background,
+  background: "rgba(8, 12, 28, 0.62)",
+  backdropFilter: "blur(8px)",
+  WebkitBackdropFilter: "blur(8px)",
 });
 
 export const inner = style({
   width: "100%",
-  maxWidth: "760px",
+  "@media": {
+    [media.tablet]: {
+      maxWidth: "440px",
+    },
+  },
 });

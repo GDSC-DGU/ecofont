@@ -56,7 +56,7 @@ ecofont/
 ## 4. 작업 흐름 (AI-DLC)
 
 ```
-INCEPTION (완료) → CONSTRUCTION (Unit 2 Code Generation 완료, Unit 1a/1b/3/4 진행 대기) → OPERATIONS
+INCEPTION (완료) → CONSTRUCTION (Unit 1a·1b·1c·2 완료 — Unit 3·4 진행 대기) → OPERATIONS
 ```
 
 - 현재 상태: `aidlc-docs/aidlc-state.md`
@@ -130,6 +130,10 @@ INCEPTION (완료) → CONSTRUCTION (Unit 2 Code Generation 완료, Unit 1a/1b/3
 | `audit.md` | 모든 결정·대화 이력 |
 | `inception/requirements/requirements.md` | FR-1~7, NFR-1~6 명세 |
 | `inception/application-design/` | 컴포넌트·서비스·유닛 설계, 의존 관계 |
+| `construction/unit-1a/functional-design/` | Unit 1a 설계 (비즈니스 로직·규칙·엔티티·컴포넌트) |
+| `construction/plans/unit-1b-code-generation-plan.md` | Unit 1b 9단계 코드 생성 플랜 |
+| `construction/build-and-test/unit-1b-build-and-test-summary.md` | Unit 1b 수동 검증 체크리스트 + 실 API 교체 범위 |
+| `construction/unit-1c/` | Unit 1c 글로시모피즘 UI 리디자인 산출물 |
 | `construction/unit-2/functional-design.md` | Unit 2 API 계약 + Q1~Q4 결정 |
 | `construction/unit-2/nfr-requirements.md` | Unit 2 NFR-U2-* 22 항목 + 측정 기준 |
 | `construction/unit-2/nfr-design.md` | uv·structlog·Dockerfile 등 NFR 구현 매핑 |

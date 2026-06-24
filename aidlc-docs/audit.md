@@ -242,11 +242,53 @@
 **Context**: Construction Phase - Unit 1b Build and Test 완료
 
 ---
+## Unit 1c Build and Test 완료 — MD3 리디자인 + 에코폰트 그리드 + Export 이미지
+
+**Timestamp**: 2026-06-19T14:00:00Z
+**User Input**: 요구사항(원본 폰트 영역 최소화, 잉크절약률·탄소절감량 Export 화면 꽉차게, MD3 컴포넌트 라이브러리 실제 import 적용) + 가이드 섹션 디자인 개선 + 초록색 제거
+**AI Response**: Unit 1c Construction 전 단계(Functional Design → NFR Requirements → NFR Design → Code Generation Plan → Code Generation → Build & Test) 완료. pnpm tsc --noEmit 에러 없음, pnpm build 성공.
+**Changes**:
+- ConversionContext: EcoFontVariant + ConversionResult(~10개 variants) + previewText 공유
+- FontGrid: Promise.allSettled 병렬 FontFace 로딩 + 3열 그리드
+- FontCard: 카드별 TTF 다운로드 + html2canvas Export (useExportImage)
+- ExportCard: 1200×630 숨겨진 캡처용 카드 (미리보기 텍스트 68px + 메트릭 96px)
+- theme.css.ts + providers.tsx: 초록색(#34A853) → 파란색(#1558B0 / #1A73E8) 전면 교체
+- UploadGuide: MUI Stepper alternativeLabel + Paper 래퍼로 리디자인
+- FontComparison: 입력 최소화 (MUI TextField만)
+- MUI v9(@mui/material@9.1.1) + AppRouterCacheProvider + Roboto(next/font) 설치·적용
+**Context**: Construction Phase - Unit 1c Build and Test 완료, 커밋 대기
+
+---
+
+## Unit 1c 확장 — 글로시모피즘 UI 리디자인 + 결과 페이지 리스트 뷰 전환
+
+**Timestamp**: 2026-06-20T00:00:00Z
+**User Input**: 아이폰 감성 유리 느낌 디자인 / 로고 Google·Apple 스타일 / 로딩 오버레이 전체화면 / 결과 페이지를 그리드가 아닌 세로 flex 리스트로 / 잉크·탄소 요약 상단 표시 / 미리보기 텍스트박스 pill 형태 / 배경 구글 클린 / favicon / ExportCard 로고 아이콘 / 머티어리얼 아이콘 적용 / 글자 길이 제한 + 줄바꿈 / ExportCard 이미지 가로 초과 수정 / 미사용 코드 삭제 + 정합성 정리
+**AI Response**: 다수 UI 개선 요청을 순차 적용.
+**Changes**:
+- `global.css.ts` + `theme.css.ts` + `providers.tsx`: 글로시모피즘 테마 (backdrop-filter blur, rgba 반투명, 중립 그레이 보더, #F8FAFF 배경)
+- `LoadingOverlay`: `createPortal(…, document.body)` 적용 — backdrop-filter 부모의 stacking context 문제 해결
+- `Logo` 컴포넌트 신규 (SVG 아이콘 + eco·font 워드마크, Google/Apple 스타일)
+- `apps/frontend/src/app/icon.svg` 신규 → Next.js 자동 favicon 적용
+- 결과 페이지: `FontGrid`/`FontCard` 3열 그리드 → `FontList`/`FontListItem` 세로 리스트 전환 (Lotte 폰트 페이지 레퍼런스)
+- `ResultSummary` 신규 — 평균 잉크절약률·탄소절감량 한줄 요약 카드
+- `FontListItem`: previewWrap(flex:1) | metrics(중앙) | actions(우측) 레이아웃; TTF·이미지 버튼 Material 아이콘(@mui/icons-material) 적용
+- `FontComparison`: pill 형태(border-radius 9999px), 플레이스홀더 전용(label 제거), 회색 기본 보더 → 파란색 포커스 보더, maxLength 40
+- `ExportCard`: 로고 SVG 아이콘 헤더 추가; previewText WebkitLineClamp 2줄; 이미지 가로 초과 방지(hero/headlineRow overflow:hidden + minWidth:0 + width:100%)
+- `useExportImage`: html2canvas에 `width: el.offsetWidth, height: el.offsetHeight` 명시 — scrollWidth 기반 가로 확장 방지
+- `convertFont.ts` mock: `download_url: string` → `ttf_blob: Blob` (TTF 직접 수신 구조 시뮬레이션, TODO 주석)
+- `useConvertFont.ts`: fetch(url) 제거 → `v.ttf_blob` 직접 사용 + `URL.createObjectURL(blob)` 생성
+- Dead code 삭제: `FontGrid`, `FontCard`, `ResultMetrics`, `DownloadResult` 컴포넌트 및 index.ts export 제거
+- `aidlc-state.md` Workspace Root 경로 수정(`/Users/toni` → `/Users/jungsun`), Unit 1c 설명 현실화
+**Context**: Construction Phase - Unit 1c 확장 완료, 커밋 대기
+
+---
+
 ## Unit 2·4 — GCP 프로비저닝 + Cloud Run 배포 완료
 
 **Timestamp**: 2026-06-24T10:30:00Z
-**User Input**: "인프라 구성 작업 마저 진행해야해" / "1번 진행 방법 알려줘. 무료 gcp 체험 가능하도록" / "SSOT 갱신 + 커밋 모두"
-**AI Response**: GCP 프로젝트 ecofont-re에 OPEN 빌링 계정(01E641-C49DD5-AD3FCD) 연결, API 7종 활성화, terraform 상태버킷 생성, ADC 계정을 팀 계정(dgu.ecofont)으로 정렬. apps/backend/uv.lock 신규 생성(Dockerfile uv sync --frozen 요구). Artifact Registry repo → 이미지(backend:0.1.0, linux/amd64) build/push → terraform apply(8 리소스). Backend URL https://ecofont-backend-pdixgz2hlq-du.a.run.app /health 200 검증. 배포 이미지는 identity placeholder AI(Unit 3 미머지). status.html·aidlc-state.md SSOT 갱신.
+**User Input**: "인프라 구성 작업 마저 진행해야해" / "1번 진행 방법 알려줘. 무료 gcp 체험 가능하도록" / "SSOT 갱신 + 커밋 모두" / "push & pr 진행"
+**AI Response**: GCP 프로젝트 ecofont-re에 OPEN 빌링 계정(01E641-C49DD5-AD3FCD) 연결, API 7종 활성화, terraform 상태버킷 생성, ADC 계정을 팀 계정(dgu.ecofont)으로 정렬. apps/backend/uv.lock 신규 생성(Dockerfile uv sync --frozen 요구). Artifact Registry repo → 이미지(backend:0.1.0, linux/amd64) build/push → terraform apply(8 리소스). Backend URL https://ecofont-backend-pdixgz2hlq-du.a.run.app /health 200 검증. 배포 이미지는 identity placeholder AI(Unit 3 미머지). status.html·aidlc-state.md SSOT 갱신. PR #19로 develop에 머지(develop 진척분과 충돌 해소 후).
 **Context**: Construction Phase - Unit 2 Build & Test + Unit 4 Infrastructure 완료
 **Note**: 사용자 메모 — ai-engine 디렉토리 미사용, AI는 backend 하위로 구현 예정(아직 origin 미머지). 머지 시 설계 문서/CLAUDE.md의 apps/ai-engine 전제를 backend 하위로 동기화 필요(rule 5.3).
 

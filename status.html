@@ -158,7 +158,7 @@
         </div>
         <div class="progress-bar" aria-label="AI-DLC 진행 막대">
           <div class="ps-inception">Inception ✓</div>
-          <div class="ps-construction">Construction 중 (Unit 1a·1b 완료 / Unit 2·4 배포 완료)</div>
+          <div class="ps-construction">Construction 중 (Unit 1a·1b·1c 완료 / Unit 2·4 배포 완료)</div>
           <div class="ps-operations">Operations</div>
         </div>
         <div style="margin-top: 14px; font-size: 14px; color: var(--text-muted)">
@@ -189,7 +189,13 @@
               <td><strong>Unit 1b</strong><br/>Frontend API 연동</td>
               <td>이정선 / 류동현</td>
               <td><span class="pill pill-done">완료 (mock 폴링)</span></td>
-              <td>비동기 폴링 시뮬레이션 구현 완료 (POST /convert → GET /jobs 폴링 → fetch(downloadUrl)). Unit 2 배포 후 <code>src/mocks/convertFont.ts</code> → 실 API 교체만 남음. 산출물: <a href="aidlc-docs/construction/plans/unit-1b-code-generation-plan.md">unit-1b-code-generation-plan.md</a></td>
+              <td>비동기 폴링 시뮬레이션 구현 완료 (POST /convert → GET /jobs 폴링 → <code>ttf_blob</code> 직접 수신). Unit 2 배포 후 <code>src/mocks/convertFont.ts</code> → 실 API 교체만 남음. 산출물: <a href="aidlc-docs/construction/plans/unit-1b-code-generation-plan.md">unit-1b-code-generation-plan.md</a></td>
+            </tr>
+            <tr>
+              <td><strong>Unit 1c</strong><br/>글로시모피즘 UI + 리스트 뷰</td>
+              <td>이정선 / 류동현</td>
+              <td><span class="pill pill-done">완료 (커밋 대기)</span></td>
+              <td>글로시모피즘 테마(backdrop-filter), Logo·favicon, 결과 페이지 세로 리스트 뷰(FontList/FontListItem), ResultSummary, ExportCard(1200×630 이미지 Export), LoadingOverlay 포털 수정, @mui/icons-material, FontComparison pill 형태. 산출물: <a href="aidlc-docs/construction/unit-1c/">aidlc-docs/construction/unit-1c/</a></td>
             </tr>
             <tr>
               <td><strong>Unit 2</strong><br/>Backend</td>
@@ -233,8 +239,9 @@
           <h3>이정선 (Frontend 주)</h3>
           <ul class="tight">
             <li>✅ Unit 1a 완료 — mock 변환 + FontFace 미리보기 + 인터랙티브 비교 UI</li>
-            <li>✅ Unit 1b 완료 — 폴링 시뮬레이션 + fetch(downloadUrl) + 실제 지표 표시</li>
-            <li><code>pnpm dev</code>로 로컬 동작 확인 후 커밋 → PR 올리기</li>
+            <li>✅ Unit 1b 완료 — 폴링 시뮬레이션 + ttf_blob 직접 수신 + 실제 지표 표시</li>
+            <li>✅ Unit 1c 완료 — 글로시모피즘 테마, 리스트 뷰(FontList/FontListItem), ExportCard, Logo, ResultSummary, @mui/icons-material</li>
+            <li>Unit 1c 커밋 → PR 올리기 (<code>pnpm build</code> 통과 확인됨)</li>
             <li>Unit 2 Backend 배포 후: <code>src/mocks/convertFont.ts</code> → 실 API 호출로 교체 (import 1줄 + fetch 구현)</li>
             <li>실 API 계약 참조: <a href="aidlc-docs/construction/unit-2/functional-design.md">Unit 2 FD §3</a></li>
           </ul>
@@ -406,7 +413,7 @@
           <li>외부 리소스 변경 (배포 URL, GCP 프로젝트 ID 등)</li>
         </ul>
         AI 협업 시 위 트리거에서 자동 갱신됨. 직접 편집 시 본 파일 + <code>aidlc-docs/aidlc-state.md</code> 함께 확인.<br/>
-        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-24 (Unit 2·4 — Backend Cloud Run 배포 + 인프라 프로비저닝 완료 직후)
+        파일 위치: <code>status.html</code> (저장소 루트) · 작성 시점: 2026-06-24 (Unit 1c 머지 + Unit 2·4 Backend Cloud Run 배포·인프라 프로비저닝 완료 직후)
       </div>
     </div>
   </body>

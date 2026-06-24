@@ -2,9 +2,7 @@ import { keyframes, style } from "@vanilla-extract/css";
 import { vars } from "@/styles/theme.css";
 
 const spin = keyframes({
-  to: {
-    transform: "rotate(360deg)",
-  },
+  to: { transform: "rotate(360deg)" },
 });
 
 export const card = style({
@@ -13,16 +11,16 @@ export const card = style({
   gap: vars.space.lg,
   padding: vars.space.xl,
   textAlign: "center",
-  background: vars.color.surface,
-  border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.lg,
-  boxShadow: vars.shadow.subtle,
+  background: "#FFFFFF",
+  border: "none",
+  borderRadius: vars.shape.extraLarge,
+  boxShadow: "0 24px 64px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.12)",
 });
 
 export const spinner = style({
   width: "56px",
   height: "56px",
-  border: `5px solid ${vars.color.primarySoft}`,
+  border: `4px solid ${vars.color.primaryContainer}`,
   borderTopColor: vars.color.primary,
   borderRadius: "50%",
   animation: `${spin} 900ms linear infinite`,
@@ -30,25 +28,47 @@ export const spinner = style({
 
 export const title = style({
   margin: 0,
-  fontSize: "28px",
-  lineHeight: 1.2,
+  fontSize: "24px",
+  fontWeight: 400,
+  lineHeight: 1.3,
+  color: vars.color.onSurface,
 });
 
 export const description = style({
   maxWidth: "520px",
   margin: 0,
-  color: vars.color.textMuted,
+  color: vars.color.onSurfaceVariant,
   lineHeight: 1.7,
+  fontSize: "14px",
 });
 
+// MD3 Tonal Button
 export const action = style({
+  position: "relative",
   display: "inline-flex",
-  minHeight: "42px",
+  minHeight: "40px",
   alignItems: "center",
   justifyContent: "center",
   padding: `0 ${vars.space.lg}`,
-  background: vars.color.primary,
-  color: vars.color.surface,
-  borderRadius: vars.radius.sm,
-  fontWeight: 700,
+  background: vars.color.secondaryContainer,
+  color: vars.color.onSecondaryContainer,
+  border: 0,
+  borderRadius: vars.shape.full,
+  fontWeight: 500,
+  fontSize: "14px",
+  cursor: "pointer",
+  overflow: "hidden",
+  selectors: {
+    "&::before": {
+      content: "''",
+      position: "absolute",
+      inset: 0,
+      borderRadius: "inherit",
+      background: "currentColor",
+      opacity: 0,
+      transition: "opacity 200ms ease",
+    },
+    "&:hover::before": { opacity: 0.08 },
+    "&:active::before": { opacity: 0.12 },
+  },
 });

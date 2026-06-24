@@ -21,9 +21,8 @@ infra/.terraform.lock.hcl
 .DS_Store
 .history
 .pnpm-store/
+.idea/
+.vscode/
 
 # Terraform local vars (use .example as template)
 infra/terraform.tfvars
-
-# JetBrains IDE
-.idea/
