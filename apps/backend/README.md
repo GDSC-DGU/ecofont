@@ -39,6 +39,20 @@ API:
 - `GET /jobs/{job_id}` → 상태별 응답 (pending/processing/done/failed)
 - `GET /health` → `{ status: "ok" }`
 
+### API 문서 (Swagger / OpenAPI) — 프론트 연동용
+
+FastAPI 자동 생성. 서버 실행 후 또는 배포본에서 바로 확인:
+
+| 문서 | 경로 |
+|------|------|
+| Swagger UI (Try it out 가능) | `/docs` |
+| ReDoc | `/redoc` |
+| OpenAPI 스키마(JSON) | `/openapi.json` |
+
+- 배포본: <https://ecofont-backend-pdixgz2hlq-du.a.run.app/docs>
+- 로컬: <http://localhost:8080/docs>
+- 각 엔드포인트에 요약·설명·요청/응답 예시 포함. `/openapi.json`은 프론트 타입 생성기(openapi-typescript 등) 입력으로도 사용 가능.
+
 ## 컨테이너 빌드
 
 ```bash
