@@ -7,12 +7,13 @@ import * as styles from "./ExportCard.css";
 type ExportCardProps = {
   variant: EcoFontVariant;
   previewText: string;
+  fallbackText: string;
   fontFamily: string;
   originalFileName: string;
 };
 
 export const ExportCard = forwardRef<HTMLDivElement, ExportCardProps>(
-  ({ variant, previewText, fontFamily, originalFileName }, ref) => {
+  ({ variant, previewText, fallbackText, fontFamily, originalFileName }, ref) => {
     const inkPct = `${(variant.inkSavingRate * 100).toFixed(1)}%`;
     const carbonG = `${variant.carbonReduction}g`;
     const today = new Date().toLocaleDateString("ko-KR", {
@@ -21,7 +22,7 @@ export const ExportCard = forwardRef<HTMLDivElement, ExportCardProps>(
       day: "2-digit",
     });
 
-    const displayText = previewText || "지속 가능한 타이포그래피 EcoFont";
+    const displayText = previewText || fallbackText;
 
     return (
       <div className={styles.hidden}>
@@ -55,16 +56,12 @@ export const ExportCard = forwardRef<HTMLDivElement, ExportCardProps>(
 
             <div className={styles.metricsRow}>
               <div className={styles.metricBlock}>
-                <span className={styles.metricValue} style={{ fontFamily }}>
-                  {inkPct}
-                </span>
+                <span className={styles.metricValue}>{inkPct}</span>
                 <span className={styles.metricLabel}>잉크 절약</span>
               </div>
               <div className={styles.metricDivider} />
               <div className={styles.metricBlock}>
-                <span className={styles.metricValue} style={{ fontFamily }}>
-                  {carbonG}
-                </span>
+                <span className={styles.metricValue}>{carbonG}</span>
                 <span className={styles.metricLabel}>탄소 절감</span>
               </div>
             </div>
