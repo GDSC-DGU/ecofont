@@ -7,6 +7,8 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import type { EcoFontVariant } from "@/context/ConversionContext";
 import { useConversion } from "@/context/ConversionContext";
+import { downloadFile } from "@/api/fontGeneration";
+import { getScriptPreviewConfig } from "@/constants/preview";
 import { useExportImage } from "@/hooks/useExportImage";
 import { ExportCard } from "@/components/result/ExportCard";
 import { copy } from "@/constants/copy";
@@ -20,9 +22,11 @@ type Props = {
 };
 
 export function FontListItem({ variant, index, originalFileName, fontsLoaded }: Props) {
-  const { previewText } = useConversion();
+  const { previewText, result } = useConversion();
+  const fallbackSample = getScriptPreviewConfig(result?.script).fallbackSample;
   const exportCardRef = useRef<HTMLDivElement>(null);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const fontFamily = `eco-variant-${index}`;
   const { exportImage, isExporting } = useExportImage(
@@ -30,11 +34,16 @@ export function FontListItem({ variant, index, originalFileName, fontsLoaded }: 
     variant.fileName.replace(/\.ttf$/i, "")
   );
 
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    a.href = variant.downloadUrl;
-    a.download = variant.fileName;
-    a.click();
+  const handleDownload = async () => {
+    // 크로스 오리진 URL 이라 <a download> 가 무시되므로 blob 으로 받아 저장
+    setIsDownloading(true);
+    try {
+      await downloadFile(variant.downloadUrl, variant.fileName);
+    } catch {
+      setExportError(copy.result.exportError);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleExport = async () => {
@@ -60,7 +69,7 @@ export function FontListItem({ variant, index, originalFileName, fontsLoaded }: 
           className={displayText ? styles.previewText : styles.previewPlaceholder}
           style={fontStyle}
         >
-          {displayText ?? "잉크 다이어트, Ecofont"}
+          {displayText ?? fallbackSample}
         </p>
         <p className={styles.fileName}>{variant.fileName}</p>
       </div>
@@ -68,12 +77,12 @@ export function FontListItem({ variant, index, originalFileName, fontsLoaded }: 
       {/* 중앙: 메트릭 */}
       <div className={styles.metrics} aria-label={`잉크 절약 ${inkPct}, 탄소 절감 ${carbonG}`}>
         <div className={styles.metricBlock}>
-          <span className={styles.metricPrimary} style={fontStyle}>{inkPct}</span>
+          <span className={styles.metricPrimary}>{inkPct}</span>
           <span className={styles.metricSecondary}>잉크 절약</span>
         </div>
         <div className={styles.metricDivider} aria-hidden="true" />
         <div className={styles.metricBlock}>
-          <span className={styles.metricPrimary} style={fontStyle}>{carbonG}</span>
+          <span className={styles.metricPrimary}>{carbonG}</span>
           <span className={styles.metricSecondary}>CO₂ 절감</span>
         </div>
       </div>
@@ -85,11 +94,17 @@ export function FontListItem({ variant, index, originalFileName, fontsLoaded }: 
           color="primary"
           size="small"
           fullWidth
-          startIcon={<FileDownloadOutlinedIcon fontSize="small" />}
+          startIcon={
+            isDownloading
+              ? <CircularProgress size={14} color="inherit" />
+              : <FileDownloadOutlinedIcon fontSize="small" />
+          }
+          disabled={isDownloading}
           onClick={handleDownload}
           aria-label={`변형 ${index + 1} TTF 다운로드`}
+          aria-busy={isDownloading}
         >
-          TTF
+          {isDownloading ? "저장 중" : "TTF"}
         </Button>
         <Button
           variant="outlined"
@@ -118,6 +133,7 @@ export function FontListItem({ variant, index, originalFileName, fontsLoaded }: 
         ref={exportCardRef}
         variant={variant}
         previewText={previewText}
+        fallbackText={fallbackSample}
         fontFamily={fontsLoaded ? fontFamily : "sans-serif"}
         originalFileName={originalFileName}
       />

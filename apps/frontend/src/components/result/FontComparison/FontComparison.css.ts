@@ -45,3 +45,72 @@ export const helper = style({
   color: vars.color.onSurfaceVariant,
   paddingLeft: vars.space.xs,
 });
+
+// Cherokee 문자 팔레트 (IME 없이 클릭으로 입력)
+export const paletteWrap = style({
+  display: "grid",
+  gap: vars.space.sm,
+});
+
+export const paletteHeader = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: vars.space.sm,
+});
+
+export const paletteHint = style({
+  margin: 0,
+  fontSize: "12px",
+  color: vars.color.onSurfaceVariant,
+});
+
+export const paletteActions = style({
+  display: "flex",
+  gap: vars.space.xs,
+});
+
+export const palette = style({
+  display: "flex",
+  flexWrap: "wrap",
+  gap: vars.space.xs,
+});
+
+export const key = style({
+  minWidth: "40px",
+  height: "40px",
+  padding: "0 8px",
+  borderRadius: vars.shape.extraSmall,
+  border: `1.5px solid ${vars.color.outline}`,
+  background: vars.color.surface,
+  color: vars.color.onSurface,
+  fontSize: "22px",
+  lineHeight: 1,
+  cursor: "pointer",
+  transition: "background 140ms ease, border-color 140ms ease",
+  selectors: {
+    "&:hover": {
+      background: vars.color.primaryContainer,
+      borderColor: vars.color.primary,
+    },
+  },
+});
+
+export const actionKey = style({
+  height: "40px",
+  padding: "0 14px",
+  borderRadius: vars.shape.extraSmall,
+  border: `1.5px solid ${vars.color.outline}`,
+  background: vars.color.surface,
+  color: vars.color.onSurfaceVariant,
+  fontSize: "13px",
+  fontWeight: 600,
+  cursor: "pointer",
+  transition: "background 140ms ease, border-color 140ms ease",
+  selectors: {
+    "&:hover": {
+      background: vars.color.primaryContainer,
+      borderColor: vars.color.primary,
+    },
+  },
+});
