@@ -14,6 +14,7 @@ import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.adapters.inbound.http.font_generation import router as font_generation_router
 from app.adapters.inbound.http.middleware import request_id_middleware
 from app.adapters.inbound.http.routes import router
 from app.config import settings
@@ -81,9 +82,4 @@ app.add_middleware(
 )
 
 app.include_router(router)
-
-# TODO(우제): Cherokee 생성 라우터를 여기 include.
-#   from app.adapters.inbound.http.font_generation import router as font_router
-#   app.include_router(font_router)
-# - POST /v1/font-generation/ttf : 50MB 검증(413) + cmap Cherokee 판정(422) + 후보 20 생성 + 응답 조립
-# - GET  /v1/assets/{job_id}/{rel_path:path} : gcs_assets.get_asset 로 GCS 프록시 서빙
+app.include_router(font_generation_router)
