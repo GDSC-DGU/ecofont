@@ -1,10 +1,11 @@
 locals {
-  input_bucket_name  = "${var.project_id}-ecofont-input"
-  output_bucket_name = "${var.project_id}-ecofont-output"
+  asset_bucket_name = "${var.project_id}-ecofont-assets"
 }
 
-resource "google_storage_bucket" "input" {
-  name          = local.input_bucket_name
+# 생성 결과물(후보 TTF 20개·zip·manifest·preview PNG) 저장 버킷.
+# Cloud Run이 결과물을 put 하고, /v1/assets 핸들러가 get 해서 프록시 서빙한다.
+resource "google_storage_bucket" "assets" {
+  name          = local.asset_bucket_name
   location      = var.region
   storage_class = "STANDARD"
   force_destroy = true
@@ -16,29 +17,7 @@ resource "google_storage_bucket" "input" {
     enabled = false
   }
 
-  lifecycle_rule {
-    condition {
-      age = 1
-    }
-    action {
-      type = "Delete"
-    }
-  }
-}
-
-resource "google_storage_bucket" "output" {
-  name          = local.output_bucket_name
-  location      = var.region
-  storage_class = "STANDARD"
-  force_destroy = true
-
-  public_access_prevention    = "enforced"
-  uniform_bucket_level_access = true
-
-  versioning {
-    enabled = false
-  }
-
+  # 결과물은 1일 후 자동 삭제.
   lifecycle_rule {
     condition {
       age = 1
@@ -48,11 +27,6 @@ resource "google_storage_bucket" "output" {
     }
   }
 
-  # 브라우저가 Signed URL로 직접 다운로드 — MVP는 모든 origin 허용
-  cors {
-    origin          = ["*"]
-    method          = ["GET"]
-    response_header = ["Content-Type", "Content-Disposition"]
-    max_age_seconds = 3600
-  }
+  # 다운로드는 Cloud Run이 GCS object를 읽어 프록시 서빙한다(상대경로 /v1/assets/...).
+  # 브라우저가 GCS에 직접 접근하지 않으므로 버킷 CORS 불필요 (Signed URL 방식 폐기).
 }

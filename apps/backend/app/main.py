@@ -1,4 +1,9 @@
-"""FastAPI 부트스트랩 — DI 와이어링 + 라이프사이클."""
+"""FastAPI 부트스트랩 — 운영 배선(CORS·로깅·헬스).
+
+우제 Cherokee 폰트 생성 API가 기존 비동기 오케스트레이터를 통째 대체한다.
+이 파일은 우제 라우터가 붙기 전의 골격(운영 배선 + /health)이다.
+이식 가이드: `apps/backend/INTEGRATION.md`.
+"""
 
 from __future__ import annotations
 
@@ -9,15 +14,10 @@ import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.adapters.inbound.http.font_generation import router as font_generation_router
 from app.adapters.inbound.http.middleware import request_id_middleware
 from app.adapters.inbound.http.routes import router
-from app.adapters.outbound.fonttools_processor import FontToolsProcessorAdapter
-from app.adapters.outbound.gcs_storage import GcsStorageAdapter
-from app.adapters.outbound.inprocess_ai_engine import InProcessAIEngineAdapter
-from app.adapters.outbound.memory_job_store import MemoryJobStoreAdapter
-from app.application.convert_font import ConvertFontUseCase
 from app.config import settings
-from app.domain.models import ErrorInfo
 from app.logging_config import configure_logging
 
 logger = structlog.get_logger()
@@ -26,70 +26,36 @@ logger = structlog.get_logger()
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     configure_logging(level=settings.log_level)
-    logger.info(
-        "startup",
-        input_bucket=settings.gcs_input_bucket,
-        output_bucket=settings.gcs_output_bucket,
-    )
-
-    job_store = MemoryJobStoreAdapter()
-    use_case = ConvertFontUseCase(
-        storage=GcsStorageAdapter(),
-        ai_engine=InProcessAIEngineAdapter(),
-        font_processor=FontToolsProcessorAdapter(),
-        job_store=job_store,
-        input_bucket=settings.gcs_input_bucket,
-        output_bucket=settings.gcs_output_bucket,
-        signed_url_ttl_seconds=settings.signed_url_ttl_seconds,
-    )
-    app.state.convert_use_case = use_case
-    app.state.job_store = job_store
-
+    logger.info("startup", asset_bucket=settings.gcs_asset_bucket)
     yield
-
-    # Graceful shutdown — in-flight Job들을 failed 마킹 (NFR-U2-REL-5)
-    processing = await job_store.list_processing()
-    for job in processing:
-        await job_store.update(
-            job.id,
-            status="failed",
-            stage=None,
-            error=ErrorInfo(
-                code="SERVICE_UNAVAILABLE",
-                stage=job.stage,
-                message="서비스가 재시작되어 작업이 중단되었습니다.",
-            ),
-        )
-    if processing:
-        logger.warning("shutdown_aborted_jobs", count=len(processing))
     logger.info("shutdown_complete")
 
 
 API_DESCRIPTION = """
-TTF 폰트를 잉크 절약형 **에코폰트**로 변환하는 API.
+업로드한 TTF를 Cherokee 에코폰트 후보로 변환하는 API.
 
-### 변환 흐름 (비동기 폴링)
-1. **`POST /convert`** — `.ttf` 파일을 multipart로 업로드 → `202` + `job_id` 수신
-2. **`GET /jobs/{job_id}`** — 완료까지 폴링. `status`가 `pending`→`processing`→`done`(또는 `failed`)으로 전이
-   - `processing`: `progress`(0~1) + `stage`(`uploading`/`parsing`/`optimizing`/`finalizing`)
-   - `done`: `result.download_url`(GCS Signed URL, 24h) + 지표(`ink_saving_rate`, `carbon_reduction_g`)
-3. 프론트는 `download_url`을 `fetch` 해 변환된 TTF를 받는다 (버킷 CORS 허용됨).
+### 변환 흐름 (동기 단일 요청)
+1. **`POST /v1/font-generation/ttf`** — `.ttf`를 multipart(`font` 필드)로 업로드.
+   서버가 cmap으로 Cherokee 여부를 자동 판정하고, Cherokee면 eco 후보 TTF 20개 + 평균 OCR 점수를
+   한 번의 응답(`status:"completed"`)으로 반환한다. (비동기 폴링 없음)
+2. 결과 파일(후보 TTF·zip·preview)은 응답의 상대경로 URL `/v1/assets/{job_id}/...`로 다운로드한다.
 
 ### 프론트 연동 메모
-- 제약: 단일 `.ttf` ≤ 10MB. 위반 시 `413`/`415`/`400` + `{error, message}` 본문.
+- 제약: 단일 폰트 ≤ 50MB. 위반/미지원 시 `413`/`422` + `{detail}` 본문.
 - CORS: Vercel(프로덕션·preview)·localhost 출처 허용.
-- 폴링 권장 간격 2~3초. job은 만료되면 `404`.
+- `*_url`은 상대경로 → 프론트가 API_BASE를 붙여 다운로드.
 """
 
 tags_metadata = [
-    {"name": "convert", "description": "폰트 변환 작업 시작 및 상태 폴링"},
+    {"name": "font-generation", "description": "Cherokee 에코폰트 후보 생성"},
+    {"name": "assets", "description": "생성 결과물 다운로드 (GCS 프록시 서빙)"},
     {"name": "health", "description": "Cloud Run 헬스 체크 (probe용)"},
 ]
 
 app = FastAPI(
     title="Eco-Font Backend",
     description=API_DESCRIPTION,
-    version="0.2.0",
+    version="0.3.0",
     lifespan=lifespan,
     openapi_tags=tags_metadata,
     servers=[
@@ -110,9 +76,10 @@ app.add_middleware(
     allow_origin_regex=settings.cors_allow_origin_regex or None,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
-    allow_credentials=False,  # 쿠키 미사용(다운로드는 GCS Signed URL) → 자격증명 불필요
+    allow_credentials=False,  # 쿠키 미사용(다운로드는 상대경로 asset URL) → 자격증명 불필요
     expose_headers=["X-Request-ID"],
     max_age=3600,
 )
 
 app.include_router(router)
+app.include_router(font_generation_router)
